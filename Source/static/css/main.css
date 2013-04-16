@@ -93,17 +93,89 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+/* ==============================
+   Youth Radio Classes
+   ============================== */
 
+.list {
+    float: left;
+    min-width: 250px;
+    width: 50%;
+}
 
+.list h1 {
+    background: #9ABD4B;
+    font-size: 1.1em;
+    font-weight: 800;
+    padding-right: 10px;
+}
 
+.list ul {
+    list-style: square;
+}
 
+.list ol {
+    list-style: decimal-leading-zero;
+}
 
+.list li {
+    /* border-left: 1px solid red; */
+    padding-left: 5px;
+}
 
+.centre {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
+/* ==============================
+   Youth Radio Header Styles
+   ============================== */
+#yr_header {
+    width: 100%; 
+    text-align: center;
+}
 
+#yr_header #yr_status_bar {
+    background: #000000; 
+    width: 100%; 
+    color: #FFFFFF; 
+    text-align: left; 
+    font-size: .75em; 
+    font-weight: 800;
+    display: block;
+}
 
+#yr_header table {
+    width: 100%;
+}
 
+#yr_header td {
+    padding-right: 5px;
+    padding-left: 5px;
+}
 
+/* ==============================
+   Youth Radio Containers
+   ============================== */
+
+#list_container {
+    display: block;
+    width: 100%;
+}
+
+#graph_container {
+    float: left;
+    width: 100%;
+}
+
+#graph_container h1 {
+    background: #9ABD4B;
+    font-size: 1.1em;
+    font-weight: 800;
+    padding-right: 10px;
+}
 
 
 

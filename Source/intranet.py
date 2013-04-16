@@ -7,12 +7,6 @@ import datetime
 import re
 import urllib2, urllib, json
 
-# Configuration
-DEBUG = True
-MONGODB_HOST = "127.0.0.1"
-MONGODB_PORT = 27017
-METRICS_SERVER_URL = "http://127.0.0.1:5000"
-
 # Constants
 YMI_APP_RACE = ['Hispanic/Latino', 
                 'African American', 
@@ -25,9 +19,9 @@ YMI_APP_RACE = ['Hispanic/Latino',
 
 
 # Setup Flask
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.secret_key = "4lJsF7NrFRt43CmqKHTwrCwDfwtsTzpYWkbBb6LbOTFcAw9GTbKrbHzVpVbQtUJ9hP7tHtAqUT9ixjwx"
+app = Flask(__name__, instance_relative_config=True)
+#app.config.from_object(__name__)
+app.config.from_pyfile('intranet.cfg', silent=False)
 
 # Setup Google Federated Auth
 auth = GoogleFederated("youthradio.org", app)
@@ -146,11 +140,31 @@ def secret():
     # Once user is authenticated, his name and email are accessible as
     # g.user.name and g.user.email.
     #return "You have rights to be here, %s (%s): %r" % (g.user.name, g.user.email, g.user)
-    ltm = metricsServerRequest("/ADP/CURRENTLISTENERS/LAST30MINS/")
-    ltm["categories"] = range(1, 30)
+    ltm = metricsServerRequest("/ADP/SESSIONS/LAST30MINS/")
+    dl = []
+
+    for d in ltm["date_list"]:
+        #dl.append(d.replace(u'\u2019', '').encode("ascii", "ignore"))
+        dl.append(str(d).replace('T', ' ')[:-7] + " GMT")
+
+    ltm["date_list"] = dl
+
+    lifetime = {
+        "Total Listening Sessions (Including Bounced)": metricsServerRequest("/ADP/SESSIONS/TOTAL/")["Total"],
+        "Total Unique Listeners": metricsServerRequest("/ADP/LISTENER/TOTAL/")["Total"],
+        "Total Bounced (Listened for under 1 minute)": metricsServerRequest("/ADP/SESSIONS/BOUNCED/")["Total"],
+        "Total Current Sessions": metricsServerRequest("/ADP/SESSIONS/CURRENT/")["Total"],
+        "Total Songs Played": metricsServerRequest("/ADP/SONGS/TOTAL/"),
+        "Total Listener Hours": metricsServerRequest("/ADP/LISTENER/HOURS/")["Total"],
+        "Average Session Listening Time": metricsServerRequest("/ADP/SESSIONS/AVGLISTENINGTIME/")["Overall"]
+    }
+
     return render_template("index.html", 
+                           user = g.user,
                            title="Youth Radio Intranet",
-                           songs=metricsServerRequest("/ADP/SONGS/LASTPLAYED/?limit=10"),
-                           last_thirty_mins=ltm)
+                           songs=metricsServerRequest("/ADP/SONGS/PLAYED/?limit=10"),
+                           last_thirty_mins=ltm,
+                           server_url=app.config["METRICS_SERVER_URL"],
+                           lifetime_stats=lifetime)
 
 app.run(host='127.0.0.1', port=5001, debug=app.config["DEBUG"])

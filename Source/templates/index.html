@@ -12,8 +12,8 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="/static/css/normalize.css">
+        <link rel="stylesheet" href="/static/css/main.css">
         <script src="/static/js/vendor/modernizr-2.6.2.min.js"></script>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -24,9 +24,17 @@
         <script src="/static/js/highcharts/highcharts.js"></script>
         <script src="/static/js/highcharts/modules/exporting.js"></script>
 
+        <script src="/static/js/date.js"></script>
+
         <script type="text/javascript">
 $(function () {
-        $('#container').highcharts({
+        var date_list = {{ last_thirty_mins["date_list"]|safe }};
+        var dl = new Array();
+        for ( var i = 0; i < date_list.length; i++ ) {
+            dl.push(Date.parse(date_list[i]));
+        }
+
+        $('#recent_total_listeners').highcharts({
             chart: {
                 type: 'area'
             },
@@ -34,14 +42,22 @@ $(function () {
                 text: 'Total Listeners'
             },
             subtitle: {
-                text: 'Last 30 Minutes'
+                text: 'Last {{ last_thirty_mins["56K Shoutcast Server"]|length }} Minutes'
             },
             xAxis: {
-                categories: {{ last_thirty_mins.categories }},
-                tickmarkPlacement: 'on',
+                type: 'datetime',
+                categories: dl,
+                labels: {
+                    formatter: function() {
+                        return this.value.toString("h:mm");
+                    }
+                },
                 title: {
                     enabled: false
-                }
+                },
+                tickmarkPlacement: "on",
+                startOnTick: true,
+                endOnTick: true
             },
             yAxis: {
                 title: {
@@ -61,19 +77,24 @@ $(function () {
                 area: {
                     stacking: 'normal',
                     lineColor: '#666666',
-                    lineWidth: 1,
+                    lineWidth: 3,
                     marker: {
                         lineWidth: 1,
                         lineColor: '#666666'
-                    }
+                    },
+                    shadow: true
                 }
             },
             series: [{
                 name: '128K Current Listeners',
-                data: {{ last_thirty_mins["128K Shoutcast Server"] }}
+                data: {{ last_thirty_mins["128K Shoutcast Server"] }},
+                lineWidth: 3,
+                color: '#9ABD4B'
             }, {
                 name: '56K Current Listeners',
-                data: {{ last_thirty_mins["56K Shoutcast Server"] }}
+                data: {{ last_thirty_mins["56K Shoutcast Server"] }},
+                lineWidth: 3,
+                color: '#000000'
             }]
         });
     });
@@ -85,18 +106,39 @@ $(function () {
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-
-        <div id="playlist_container" style="min-width: 250px; margin: auto">
-            <p>Last {{ songs|length }} Songs Played</p>
-            <ul id="playlist">
-                {% for song in songs %}
-                <li>{{ song }}</li>
-                {% endfor %}
-            </ul>
+        <div id="yr_header">
+            <div id="yr_status_bar">
+                <table>
+                    <tr><td align="left">( Metrics Server: {{ server_url }} )</td><td align="right">Welcome, {{ user.name }}</td></tr>
+                </table>
+            </div>
+            <img src="/static/img/YR_final_large.jpg" style="margin: 0px; width: 1000px;" />
         </div>
 
-        <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+        <div id="list_container">
+            <div class="list">
+                <h1>Last {{ songs|length }} Songs Played</h1>
+                <ol>
+                    {% for song in songs %}
+                    <li>{{ song|safe }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
 
+            <div class="list">
+                <h1>Lifetime Stats</h1>
+                <ul id="metrics_list">
+                    {% for key, value in lifetime_stats.items() %}
+                    <li>{{ key }}: {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div id="graph_container">
+            <h1>Recent</h1>
+            <div id="recent_total_listeners" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+        </div>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
