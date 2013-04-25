@@ -22,21 +22,343 @@
         <script src="/static/js/main.js"></script>
 
         <script src="/static/js/highcharts/highcharts.js"></script>
+        <script src="/static/js/highcharts/highcharts-more.js"></script>
         <script src="/static/js/highcharts/modules/exporting.js"></script>
 
         <script src="/static/js/date.js"></script>
 
-        <script type="text/javascript">
-$(function () {
-        var date_list = {{ last_thirty_mins["date_list"]|safe }};
-        var dl = new Array();
-        for ( var i = 0; i < date_list.length; i++ ) {
-            dl.push(Date.parse(date_list[i]));
-        }
+        <script type=text/javascript>
+          $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
 
-        $('#recent_total_listeners').highcharts({
+        <script type="text/javascript">
+function roundNumber(number, decimals) { // Arguments: number to round, number of decimal places
+    var newnumber = new Number(number+'').toFixed(parseInt(decimals));
+    return parseFloat(newnumber); // Output the result to the form field (change for your purposes)
+};
+
+$(function () {
+        Highcharts.setOptions({                                            
+            // This is for all plots, change Date axis to local timezone
+            global : {
+                useUTC : false
+            }
+        });
+
+        // Radialize the colors
+        Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
+            return {
+                radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+                stops: [
+                    [0, color],
+                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                ]
+            };
+        });
+        
+        // Build the chart
+        $('#chart_bounce_rate').highcharts({
             chart: {
-                type: 'area'
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                animation: Highcharts.svg,
+                events: {
+                    load: function() {
+                        // set up the updating of the chart
+                        var series = this.series[0],
+                            bounced_sessions = series.points[0],
+                            listening_sessions = series.points[1];
+                        setInterval(function() {
+                            // Get the total listening sessions...
+                            $.ajax($SCRIPT_ROOT + '/_getOverallTotalListeningSessions')
+                             .done(function (result) {
+                                //alert("success");
+                                bounced_sessions.update(['Bounced Sessions', result['All']['Bounced']]);
+                                listening_sessions.update(['Listening Sessions', result['All']["Total"] - result['All']['Bounced']]);
+                              })
+                             .fail(function (result) {
+                                //alert("error " + result + " " + textStatus);
+                                console.log("Bounce Rate - Failing Gracefully: " + result)
+                              });
+                        }, 300000);
+                    }
+                }
+            },
+            title: {
+                text: 'Overall Bounce Rate'
+            },
+            tooltip: {
+                percentageDecimals: 2
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        inside: true,
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return roundNumber(this.percentage, 2) +'%';
+                        }
+                    },
+                    size: "75%",
+                    showInLegend: true,
+                    colors: ['#9ABD4B', '#000000']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Total',
+                data: [
+                    ['Bounced Sessions', {{ lifetime_stats['Total Bounced (Listened for under 1 minute)'] }} ],
+                    ['Listening Sessions', {{ lifetime_stats['Total Listening Sessions (Including Bounced)'] - lifetime_stats['Total Bounced (Listened for under 1 minute)'] }} ]
+                ]
+            }]
+        });
+
+        $('#chart_total_numbers').highcharts({
+            chart: {
+                type: 'bar',
+                animation: Highcharts.svg,
+                events: {
+                    load: function() {
+                        // set up the updating of the chart
+                        var series = this.series[0],
+                            listening_sessions = series.points[0],
+                            unique_listeners = series.points[1];
+                        setInterval(function() {
+                            // Get the total listening sessions...
+                            $.ajax($SCRIPT_ROOT + '/_getOverallTotalListeningSessions')
+                             .done(function (result) {
+                                //alert("success");
+                                listening_sessions.update(result['All']["Total"] - result['All']['Bounced']);
+                              })
+                             .fail(function (result) {
+                                //alert("error " + result + " " + textStatus);
+                                console.log("Overall Sessions Total - Failing Gracefully: " + result)
+                              });
+
+                            // Get the overall unique users...
+                            $.ajax($SCRIPT_ROOT + '/_getOverallUniqueListeners')
+                             .done(function (result) {
+                                //alert("success");
+                                unique_listeners.update(result["Total"]);
+                              })
+                             .fail(function (result) {
+                                //alert("error " + result + " " + textStatus);
+                                console.log("Unique Listeners Total - Failing Gracefully: " + result)
+                              })
+
+                        }, 300000);
+                    }
+                }
+            },
+            colors: ['#9ABD4B', '#000000'],
+            title: {
+                text: 'Overall Numbers'
+            },
+            xAxis: {
+                categories: ['Total<br />Listening<br />Sessions', 'Total<br />Unique<br />Listeners'],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: null
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ''
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                        inside: true,
+                        align: 'right',
+                        color: '#FFFFFF',
+                        style: {
+                            fontWeight:'bold'
+                        }
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'Overall',
+                data: [{{ lifetime_stats['Total Listening Sessions (Including Bounced)'] - lifetime_stats['Total Bounced (Listened for under 1 minute)'] }}, {{ lifetime_stats['Total Unique Listeners'] }}]
+            }]
+        });
+
+    $('#chart_current_sessions').highcharts({
+    
+            chart: {
+                type: 'gauge',
+                plotBackgroundColor: null,
+                plotBackgroundImage: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                animation: Highcharts.svg,
+                events: {
+                    load: function() {
+                        // set up the updating of the chart
+                        var series = this.series[0],
+                            point = series.points[0],
+                            newVal;
+                        setInterval(function() {
+                            $.ajax($SCRIPT_ROOT + '/_getCurrentSessionsTotal')
+                             .done(function (result) {
+                                //alert("success");
+                                newVal = result["Total"];
+                                point.update(newVal);
+                              })
+                             .fail(function (result) {
+                                //alert("error " + result + " " + textStatus);
+                                console.log("Current Sessions Total - Failing Gracefully: " + result)
+                              })
+                        }, 60000);
+                    }
+                }
+            },
+            
+            title: {
+                text: 'Current Listeners'
+            },
+            
+            pane: {
+                startAngle: -150,
+                endAngle: 150,
+                background: [{
+                    backgroundColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                        stops: [
+                            [0, '#FFF'],
+                            [1, '#333']
+                        ]
+                    },
+                    borderWidth: 0,
+                    outerRadius: '109%'
+                }, {
+                    backgroundColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                        stops: [
+                            [0, '#333'],
+                            [1, '#FFF']
+                        ]
+                    },
+                    borderWidth: 1,
+                    outerRadius: '107%'
+                }, {
+                    // default background
+                }, {
+                    backgroundColor: '#DDD',
+                    borderWidth: 0,
+                    outerRadius: '105%',
+                    innerRadius: '103%'
+                }]
+            },
+               
+            // the value axis
+            yAxis: {
+                min: 0,
+                max: 50,
+                
+                minorTickInterval: 'auto',
+                minorTickWidth: 1,
+                minorTickLength: 8,
+                minorTickPosition: 'inside',
+                minorTickColor: '#666',
+        
+                tickPixelInterval: 50,
+                tickWidth: 2,
+                tickPosition: 'inside',
+                tickLength: 15,
+                tickColor: '#666',
+                labels: {
+                    step: 2,
+                    rotation: 'auto'
+                },
+                title: {
+                    text: 'Listening<br \>Sessions'
+                },
+                plotBands: [{
+                    from: 0,
+                    to: 25,
+                    color: '#55BF3B' // green
+                }, {
+                    from: 25,
+                    to: 37,
+                    color: '#DDDF0D' // yellow
+                }, {
+                    from: 37,
+                    to: 50,
+                    color: '#DF5353' // red
+                }]        
+            },
+        
+            series: [{
+                name: 'Sessions',
+                data: [{{ lifetime_stats['Total Current Sessions'] }}],
+                tooltip: {
+                    valueSuffix: ' listeners'
+                }
+            }]
+        
+        });
+
+});
+
+$(function () {
+        var dl = {{ last_thirty_mins["date_list"]|safe }};
+
+        var chart_recent_total_listeners = new Highcharts.Chart({
+            chart: {
+                type: 'areaspline',
+                renderTo: 'chart_recent_total_listeners',
+                events: {
+                    load: function() {
+                        // set up the updating of the chart
+                        var highQualitySeries = this.series[0],
+                            lowQualitySeries = this.series[1];
+                        setInterval(function() {
+                            $.ajax($SCRIPT_ROOT + '/_getCurrentSessionsTotal')
+                             .done(function (result) {
+                                //alert("success");
+                                var high = result["128K Shoutcast Server"],
+                                    low = result["56K Shoutcast Server"],
+                                    newDate = result["Date"];
+
+                                highQualitySeries.addPoint([newDate, high], false, true);
+                                lowQualitySeries.addPoint([newDate, low], false, true);
+
+                                dates = chart_recent_total_listeners.xAxis[0].categories;
+
+                                // Do final updates...
+                                dates.push(newDate);
+                                chart_recent_total_listeners.xAxis[0].setCategories(dates, false);
+
+                                // Redraw the chart...
+                                chart_recent_total_listeners.redraw();
+                              })
+                             .fail(function (result) {
+                                console.log("Recent Total Listeners Area Graph - Failing Gracefully: " + result)
+                              })
+                        }, 60000);
+                    }
+                }
             },
             title: {
                 text: 'Total Listeners'
@@ -45,13 +367,8 @@ $(function () {
                 text: 'Last {{ last_thirty_mins["56K Shoutcast Server"]|length }} Minutes'
             },
             xAxis: {
-                type: 'datetime',
+                type: 'category',
                 categories: dl,
-                labels: {
-                    formatter: function() {
-                        return this.value.toString("h:mm");
-                    }
-                },
                 title: {
                     enabled: false
                 },
@@ -74,8 +391,7 @@ $(function () {
                 valueSuffix: ' listeners'
             },
             plotOptions: {
-                area: {
-                    stacking: 'normal',
+                areaspline: {
                     lineColor: '#666666',
                     lineWidth: 3,
                     marker: {
@@ -83,14 +399,16 @@ $(function () {
                         lineColor: '#666666'
                     },
                     shadow: true
-                }
+                },
             },
             series: [{
+                stacking: 'normal',
                 name: '128K Current Listeners',
                 data: {{ last_thirty_mins["128K Shoutcast Server"] }},
                 lineWidth: 3,
                 color: '#9ABD4B'
             }, {
+                stacking: 'normal',
                 name: '56K Current Listeners',
                 data: {{ last_thirty_mins["56K Shoutcast Server"] }},
                 lineWidth: 3,
@@ -98,9 +416,201 @@ $(function () {
             }]
         });
     });
-    
 
-        </script>
+
+$(function () {
+        var dl = {{ last_twenty_four_hours["date_list"]|safe }};
+
+        var chart_last24hours_total_listeners = new Highcharts.Chart({
+            chart: {
+                type: 'column',
+                renderTo: 'chart_last24hours_total_listeners',
+                events: {
+                    load: function() {
+                        // set up the updating of the chart
+                        var highQualitySeries = this.series[0],
+                            lowQualitySeries = this.series[1],
+                            axis = this.xAxis,
+                            categories = axis[0].categories;
+                        setInterval(function() {
+                            $.ajax($SCRIPT_ROOT + '/_getListeningSessionsForThisHour')
+                             .done(function (result) {
+                                //alert("success");
+                                var high = result["128K Shoutcast Server"],
+                                    low = result["56K Shoutcast Server"],
+                                    currentHour = result["Hour"];
+
+                                // Do final updates...
+                                if (categories.slice(-1)[0] == currentHour) {
+                                    highQualitySeries.points[23].update(high, false, false);
+                                    lowQualitySeries.points[23].update(low, false, false);
+                                    console.log("Current Hour: " + currentHour + " High: " + high + " Low: " + low)
+                                } else {
+                                    highQualitySeries.addPoint(high, false, true);
+                                    lowQualitySeries.addPoint(low, false, true);
+
+                                    hours = chart_last24hours_total_listeners.xAxis[0].categories;
+
+                                    // Do final updates...
+                                    hours.push(currentHour);
+                                    chart_last24hours_total_listeners.xAxis[0].setCategories(hours, false);
+                                }
+
+                                // Redraw the chart...
+                                chart_last24hours_total_listeners.redraw();
+                              })
+                             .fail(function (result) {
+                                console.log("Listeners 24 Hours Column Graph - Failing Gracefully: " + result)
+                              })
+                        }, 60000);
+                    }
+                }            },
+            title: {
+                text: 'Total Listeners'
+            },
+            subtitle: {
+                text: 'Last {{ last_twenty_four_hours["56K Shoutcast Server"]|length }} Hours'
+            },
+            xAxis: {
+                type: 'category',
+                categories: dl,
+                title: {
+                    text: 'Hours'
+                },
+                title: {
+                    enabled: true
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Listeners'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -100,
+                verticalAlign: 'top',
+                y: 40,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' listeners'
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series: [{
+                name: '128K Current Listeners',
+                data: {{ last_twenty_four_hours["128K Shoutcast Server"] }},
+                color: '#9ABD4B'
+            }, {
+                name: '56K Current Listeners',
+                data: {{ last_twenty_four_hours["56K Shoutcast Server"] }},
+                color: '#000000'
+            }]
+        });
+    });
+
+
+$(function () {
+        var dl = {{ last_seven_days["date_list"]|safe }};
+
+        Highcharts.setOptions({                                            
+            // This is for all plots, change Date axis to local timezone
+            global : {
+                useUTC : true
+            }
+        });
+
+
+        $('#chart_last7days_total_listeners').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Total Listeners'
+            },
+            subtitle: {
+                text: 'Last {{ last_seven_days["56K Shoutcast Server"]|length }} Days'
+            },
+            xAxis: {
+                type: 'category',
+                categories: dl,
+                title: {
+                    text: 'Days'
+                },
+                title: {
+                    enabled: true
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Listeners'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -100,
+                verticalAlign: 'top',
+                y: 40,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' listeners'
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series: [{
+                name: '128K Current Listeners',
+                data: {{ last_seven_days["128K Shoutcast Server"] }},
+                color: '#9ABD4B'
+            }, {
+                name: '56K Current Listeners',
+                data: {{ last_seven_days["56K Shoutcast Server"] }},
+                color: '#000000'
+            }]
+        });
+    });
+           </script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -126,18 +636,21 @@ $(function () {
             </div>
 
             <div class="list">
-                <h1>Lifetime Stats</h1>
-                <ul id="metrics_list">
-                    {% for key, value in lifetime_stats.items() %}
-                    <li>{{ key }}: {{ value }}</li>
-                    {% endfor %}
-                </ul>
+                <h1>Realtime Stats</h1>
+                <div id="chart_current_sessions"></div>
             </div>
         </div>
 
-        <div id="graph_container">
+        <div id="lifetime_graph_container">
+            <h1>Lifetime Dashboard</h1>
+            <div id="chart_total_numbers"></div>
+            <div id="chart_bounce_rate"></div>
+        </div>
+        <div id="recent_graph_container">
             <h1>Recent</h1>
-            <div id="recent_total_listeners" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+            <div id="chart_recent_total_listeners"></div>
+            <div id="chart_last24hours_total_listeners"></div>
+            <div id="chart_last7days_total_listeners"></div>
         </div>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

@@ -156,6 +156,14 @@ textarea {
     padding-left: 5px;
 }
 
+h1 {
+    display: block;
+    background: #9ABD4B;
+    font-size: 1.1em;
+    font-weight: 800;
+    padding-right: 10px;
+}
+
 /* ==============================
    Youth Radio Containers
    ============================== */
@@ -165,21 +173,28 @@ textarea {
     width: 100%;
 }
 
-#graph_container {
+#lifetime_graph_container, 
+#recent_graph_container {
     float: left;
     width: 100%;
 }
 
-#graph_container h1 {
-    background: #9ABD4B;
-    font-size: 1.1em;
-    font-weight: 800;
-    padding-right: 10px;
+#chart_recent_total_listeners, 
+#chart_last24hours_total_listeners, 
+#chart_last7days_total_listeners {
+    min-width: 400px; 
+    height: 400px; 
+    margin: 0 auto;
 }
 
-
-
-
+#chart_bounce_rate, 
+#chart_total_numbers,
+#chart_current_sessions {
+    float: left;
+    width: 275px;
+    height: 275px;
+    margin: 0 auto;
+}
 
 /* ==========================================================================
    Helper classes
