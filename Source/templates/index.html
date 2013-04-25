@@ -81,7 +81,7 @@ $(function () {
                                 //alert("error " + result + " " + textStatus);
                                 console.log("Bounce Rate - Failing Gracefully: " + result)
                               });
-                        }, 300000);
+                        }, 60000);
                     }
                 }
             },
@@ -152,7 +152,7 @@ $(function () {
                                 console.log("Unique Listeners Total - Failing Gracefully: " + result)
                               })
 
-                        }, 300000);
+                        }, 60000);
                     }
                 }
             },
@@ -444,7 +444,6 @@ $(function () {
                                 if (categories.slice(-1)[0] == currentHour) {
                                     highQualitySeries.points[23].update(high, false, false);
                                     lowQualitySeries.points[23].update(low, false, false);
-                                    console.log("Current Hour: " + currentHour + " High: " + high + " Low: " + low)
                                 } else {
                                     highQualitySeries.addPoint(high, false, true);
                                     lowQualitySeries.addPoint(low, false, true);
@@ -464,7 +463,8 @@ $(function () {
                               })
                         }, 60000);
                     }
-                }            },
+                }            
+            },
             title: {
                 text: 'Total Listeners'
             },
@@ -534,17 +534,51 @@ $(function () {
 $(function () {
         var dl = {{ last_seven_days["date_list"]|safe }};
 
-        Highcharts.setOptions({                                            
-            // This is for all plots, change Date axis to local timezone
-            global : {
-                useUTC : true
-            }
-        });
-
-
-        $('#chart_last7days_total_listeners').highcharts({
+        var chart_last7days_total_listeners = new Highcharts.Chart({
             chart: {
-                type: 'column'
+                type: 'column',
+                renderTo: 'chart_last7days_total_listeners',
+                events: {
+                    load: function() {
+                        // set up the updating of the chart
+                        var highQualitySeries = this.series[0],
+                            lowQualitySeries = this.series[1],
+                            axis = this.xAxis,
+                            categories = axis[0].categories;
+                        setInterval(function() {
+                            $.ajax($SCRIPT_ROOT + '/_getListeningSessionsForToday')
+                             .done(function (result) {
+                                //alert("success");
+                                var high = result["128K Shoutcast Server"],
+                                    low = result["56K Shoutcast Server"],
+                                    currentDay = result["Day"];
+
+                                // Do final updates...
+                                if (categories.slice(-1)[0] == currentDay) {
+                                    highQualitySeries.points[6].update(high, false, false);
+                                    lowQualitySeries.points[6].update(low, false, false);
+                                } else {
+                                    highQualitySeries.addPoint(high, false, true);
+                                    lowQualitySeries.addPoint(low, false, true);
+
+                                    days = chart_last7days_total_listeners.xAxis[0].categories;
+
+                                    // Do final updates...
+                                    days.push(currentDay);
+                                    chart_last7days_total_listeners.xAxis[0].setCategories(days, false);
+                                }
+
+                                // Redraw the chart...
+                                chart_last7days_total_listeners.redraw();
+
+                                console.log("Day: " + currentDay + " High: " + high + " Low: " + low)
+                              })
+                             .fail(function (result) {
+                                console.log("Listeners 7 Days Column Graph - Failing Gracefully: " + result)
+                              })
+                        }, 60000);
+                    }
+                }
             },
             title: {
                 text: 'Total Listeners'

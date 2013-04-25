@@ -110,7 +110,8 @@ def getDateTimeAsString(dt = datetime.datetime.utcnow(),
     """
 
     if type(dt) in [str, unicode]:
-        dt = datetime.datetime(*(time.strptime(dt[:-7].replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
+        #dt = datetime.datetime(*(time.strptime(dt[:-7].replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
+        dt = datetime.datetime(*(time.strptime(dt.replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
 
     if inTimezone == 'PST':
         tz = timezone('US/Pacific')
@@ -289,9 +290,31 @@ def ajax_listeningSessionsForThisHour():
     return jsonify(ret)
 
 
-@app.route("/")
+@app.route('/_getListeningSessionsForToday', methods=['GET'])
 @auth.required
-def secret():
+def ajax_listeningSessionsForToday():
+    """ Ajax function to return the total listening sessions
+    for today.
+
+    This functions connects to the metrics server and returns
+    the total number of listening sessions that connected today.
+    """
+    ret = metricsServerRequest('/ADP/SESSIONS/LAST1DAYS/')
+
+    # Convert the date to the hour string.
+    ret["Day"] = getDateTimeAsString(dt = ret["date_list"][0], withStringFormat = '%A')
+
+    return jsonify(ret)
+
+
+@app.route("/metrics/adp")
+@app.route("/metrics/adp/")
+@auth.required
+def metrics_ADP():
+    """ The metrics for All Day Play.
+
+    This function returns the metrics screen for All Day Play.
+    """
     # Once user is authenticated, his name and email are accessible as
     # g.user.name and g.user.email.
     #return "You have rights to be here, %s (%s): %r" % (g.user.name, g.user.email, g.user)
@@ -300,7 +323,8 @@ def secret():
         dl = []
 
         for d in dates:
-            convertedDate = datetime.datetime(*(time.strptime(d[:-7].replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
+            #convertedDate = datetime.datetime(*(time.strptime(d[:-7].replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
+            convertedDate = datetime.datetime(*(time.strptime(d.replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
             dl.append(getDateTimeAsString(
                         dt = convertedDate,
                         inTimezone = 'PST',
@@ -316,7 +340,7 @@ def secret():
 
     ltm["date_list"] = handleDateList(ltm["date_list"], '%I:%M %p')
     ltfh["date_list"] = handleDateList(ltfh["date_list"], '%I%p')
-    lsd["date_list"] = handleDateList(lsd["date_list"], '%A %D')
+    lsd["date_list"] = handleDateList(lsd["date_list"], '%A')
 
     lifetime = {
         "Total Listening Sessions (Including Bounced)": metricsServerRequest("/ADP/SESSIONS/TOTAL/")["Total"],
