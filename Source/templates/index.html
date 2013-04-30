@@ -32,10 +32,172 @@
         </script>
 
         <script type="text/javascript">
-function roundNumber(number, decimals) { // Arguments: number to round, number of decimal places
+/***
+ * roundNumber()
+ *  A simple function to round a decimal to a specified
+ *  number of decimal places.
+ *
+ *  Arguments: number to round, number of decimal places
+ *  Returns: a float
+ ****/
+function roundNumber(number, decimals) {
     var newnumber = new Number(number+'').toFixed(parseInt(decimals));
-    return parseFloat(newnumber); // Output the result to the form field (change for your purposes)
+    return parseFloat(newnumber);
 };
+
+/***
+ * hashCode()
+ *  A simple function to determine a quick hash of a string.
+ *
+ *  Returns: a 32 bit integer
+ ****/
+String.prototype.hashCode = function(){
+    var hash = 0, i, char;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+};
+        </script>
+
+        <script type="text/javascript">
+/***
+ * Update current song playing via ajax method that fires
+ * every 30 seconds.
+ ****/
+$(document).ready(function() {
+    if ( $("#songs li").length ) {
+        setInterval(function() {
+            // Get the total listening sessions...
+            $.ajax($SCRIPT_ROOT + '/_getCurrentPlayingSong')
+             .done(function (result) {
+                current_song = result['song'];
+                //console.log("Current Song: " + current_song + " (" + current_song.hashCode() + ")");
+                if (current_song.hashCode() != $('#songs li:first').text().hashCode()) {
+                    $('<li>' + current_song + '</li>').insertBefore("#songs li:first");
+                    $('#songs li').last().remove();
+                } else {
+                    //console.log("Already playing song: " + current_song);
+                }
+              })
+             .fail(function (result) {
+                console.log("Get Current Song - Failing Gracefully: " + result)
+              });
+        }, 30000);
+
+    }
+});
+
+/***
+ * Update the average listening time once every 5 minutes.
+ ****/
+$(document).ready(function() {
+    setInterval(function() {
+        $.ajax($SCRIPT_ROOT + '/_getAvgSessionListeningTime')
+         .done(function (result) {
+            overall_avg = result['Overall'];
+            $('#avg_listening_time span').text(roundNumber(overall_avg, 2));
+         })
+         .fail(function (result) {
+            console.log("Get Average Listening Time - Failing Gracefully: " + overall_avg);
+        });
+    }, 60000);
+});
+
+/***
+ * Get the total listening hours updated every minute.
+ ****/
+$(document).ready(function() {
+    setInterval(function() {
+        $.ajax($SCRIPT_ROOT + '/_getTotalListenerHours')
+         .done(function (result) {
+            total_listener_hours = result['Total'];
+            $('#listener_hours span').text(roundNumber(total_listener_hours, 2));
+         })
+         .fail(function (result) {
+            console.log("Get Total Listener Hours - Failing Gracefully: " + total_listener_hours);
+        });
+    }, 60000);
+});
+
+/***
+ * Get the average listening sessions per user updated every 5 minutes.
+ ****/
+$(document).ready(function() {
+    setInterval(function() {
+        $.ajax($SCRIPT_ROOT + '/_getAvgListeningSessionsPerUser')
+         .done(function (result) {
+            sessions_per_user = result['Result'];
+            $('#sessions_per_user span').text(roundNumber(sessions_per_user, 2));
+         })
+         .fail(function (result) {
+            console.log("Get Sessions Per User - Failing Gracefully: " + sessions_per_user);
+        });
+    }, 60000);
+});
+
+
+        </script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <div id="yr_header">
+            <div id="yr_status_bar">
+                <table>
+                    <tr><td align="left">( Metrics Server: {{ server_url }} )</td><td align="right">Welcome, {{ user.name }}</td></tr>
+                </table>
+            </div>
+            <img src="/static/img/YR_final_large.jpg" style="margin: 0px; width: 1000px;" />
+        </div>
+
+        <div id="list_container">
+            <div class="list">
+                <h1>Last {{ songs|length }} Songs Played</h1>
+                <ol id="songs">
+                    {% for song in songs %}
+                    <li>{{ song|safe }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <div class="list">
+                <h1>Realtime Stats</h1>
+                <div id="chart_current_sessions"></div>
+            </div>
+        </div>
+
+        <div id="lifetime_graph_container">
+            <h1>Lifetime Dashboard</h1>
+            <div id="chart_total_numbers"></div>
+            <div id="chart_bounce_rate"></div>
+            <div id="stats_container">
+                <p id="listener_hours"><b>Total Listener Hours:</b> <span>{{ lifetime_stats['Total Listener Hours'] }}</span> hours</p>
+                <p id="avg_listening_time"><b>Avg Session Listening Time:</b> <span>{{ lifetime_stats['Average Session Listening Time'] }}</span> minutes</p>
+                <p id="sessions_per_user"><b>Listening Sessions per User:</b> <span>{{ ((lifetime_stats['Total Listening Sessions (Including Bounced)'] - lifetime_stats['Total Bounced (Listened for under 1 minute)']) / lifetime_stats['Total Unique Listeners'])|round(2, 'common') }}</span></p>
+            </div>
+        </div>
+        <div id="recent_graph_container">
+            <h1>Recent</h1>
+            <div id="chart_recent_total_listeners"></div>
+            <div id="chart_last24hours_total_listeners"></div>
+            <div id="chart_last7days_total_listeners"></div>
+        </div>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src='//www.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+
+        <!-- Set up the charts -->
+        <script type="text/javascript">
 
 $(function () {
         Highcharts.setOptions({                                            
@@ -571,7 +733,7 @@ $(function () {
                                 // Redraw the chart...
                                 chart_last7days_total_listeners.redraw();
 
-                                console.log("Day: " + currentDay + " High: " + high + " Low: " + low)
+                                //console.log("Day: " + currentDay + " High: " + high + " Low: " + low)
                               })
                              .fail(function (result) {
                                 console.log("Listeners 7 Days Column Graph - Failing Gracefully: " + result)
@@ -644,55 +806,6 @@ $(function () {
             }]
         });
     });
-           </script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-        <div id="yr_header">
-            <div id="yr_status_bar">
-                <table>
-                    <tr><td align="left">( Metrics Server: {{ server_url }} )</td><td align="right">Welcome, {{ user.name }}</td></tr>
-                </table>
-            </div>
-            <img src="/static/img/YR_final_large.jpg" style="margin: 0px; width: 1000px;" />
-        </div>
-
-        <div id="list_container">
-            <div class="list">
-                <h1>Last {{ songs|length }} Songs Played</h1>
-                <ol>
-                    {% for song in songs %}
-                    <li>{{ song|safe }}</li>
-                    {% endfor %}
-                </ol>
-            </div>
-
-            <div class="list">
-                <h1>Realtime Stats</h1>
-                <div id="chart_current_sessions"></div>
-            </div>
-        </div>
-
-        <div id="lifetime_graph_container">
-            <h1>Lifetime Dashboard</h1>
-            <div id="chart_total_numbers"></div>
-            <div id="chart_bounce_rate"></div>
-        </div>
-        <div id="recent_graph_container">
-            <h1>Recent</h1>
-            <div id="chart_recent_total_listeners"></div>
-            <div id="chart_last24hours_total_listeners"></div>
-            <div id="chart_last7days_total_listeners"></div>
-        </div>
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src='//www.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
+        </script>        
     </body>
 </html>

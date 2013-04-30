@@ -189,11 +189,34 @@ h1 {
 
 #chart_bounce_rate, 
 #chart_total_numbers,
-#chart_current_sessions {
+#chart_current_sessions,
+#stats_container {
     float: left;
     width: 275px;
     height: 275px;
     margin: 0 auto;
+}
+
+#stats_container {
+    border-left: 1px dashed black;
+    margin-left: 6px;
+    padding-left: 6px;
+}
+
+#stats_container p {
+    /* border-top: 1px solid black;
+    border-bottom: 1px solid black; */
+    padding-bottom: 4px;
+    padding-top: 4px;
+    margin: 0px;
+    font-size: 0.75em;
+}
+
+#stats_container span {
+    background: #9ABD4B;
+    color: white;
+    font-style: italic;
+    font-weight: bold;
 }
 
 /* ==========================================================================

@@ -307,6 +307,66 @@ def ajax_listeningSessionsForToday():
     return jsonify(ret)
 
 
+@app.route('/_getCurrentPlayingSong', methods=['GET'])
+@auth.required
+def ajax_currentPlayingSong():
+    """ Ajax function to return the currently playing song.
+
+    This functions connects to the metrics server and returns
+    the currently playing song.
+    """
+    one_song = metricsServerRequest("/ADP/SONGS/PLAYED/?limit=1")
+
+    ret = {"song": one_song[0]}
+
+    return jsonify(ret)
+
+
+@app.route('/_getAvgSessionListeningTime', methods=['GET'])
+@auth.required
+def ajax_avgSessionListeningTime():
+    """ Ajax function to return the avergage session listening
+    time in minutes.
+
+    This function connects to the metrics server and returns
+    the average session listening time for all streams.
+    """
+    ret = metricsServerRequest("/ADP/SESSIONS/AVGLISTENINGTIME/")
+
+    return jsonify(ret)
+
+
+@app.route('/_getTotalListenerHours', methods=['GET'])
+@auth.required
+def ajax_totalListenerHours():
+    """ Ajax function to return the total listener hours
+    in hours.
+
+    This function connects to the metrics server and returns
+    the total listener hours for all streams.
+    """
+    ret = metricsServerRequest("/ADP/LISTENER/HOURS/")
+
+    return jsonify(ret)
+
+@app.route('/_getAvgListeningSessionsPerUser', methods=['GET'])
+@auth.required
+def ajax_avgListeningSessionsPerUser():
+    """ Ajax function to return the average listening
+    sessions per user.
+
+    This function connects to the metrics server and returns
+    the average listening sessions per user.
+    """
+    ret = {}
+    ret["Total Listeners"] = float(metricsServerRequest("/ADP/LISTENER/TOTAL/")["Total"])
+    ret["Total Sessions"] = float(metricsServerRequest("/ADP/SESSIONS/TOTAL/")["Total"])
+    ret["Total Bounced"] = float(metricsServerRequest("/ADP/SESSIONS/BOUNCED/")["Total"])
+    ret["Result"] = float("%.2f" % round((ret["Total Sessions"] - ret["Total Bounced"]) / ret["Total Listeners"], 2))
+
+    return jsonify(ret)
+
+@app.route("/")
 @app.route("/metrics/adp")
 @app.route("/metrics/adp/")
 @auth.required
@@ -348,13 +408,13 @@ def metrics_ADP():
         "Total Bounced (Listened for under 1 minute)": metricsServerRequest("/ADP/SESSIONS/BOUNCED/")["Total"],
         "Total Current Sessions": metricsServerRequest("/ADP/SESSIONS/CURRENT/")["Total"],
         "Total Songs Played": metricsServerRequest("/ADP/SONGS/TOTAL/"),
-        "Total Listener Hours": metricsServerRequest("/ADP/LISTENER/HOURS/")["Total"],
-        "Average Session Listening Time": metricsServerRequest("/ADP/SESSIONS/AVGLISTENINGTIME/")["Overall"]
+        "Total Listener Hours": "%.2f" % round(metricsServerRequest("/ADP/LISTENER/HOURS/")["Total"], 2),
+        "Average Session Listening Time": "%.2f" % round(metricsServerRequest("/ADP/SESSIONS/AVGLISTENINGTIME/")["Overall"], 2)
     }
 
     return render_template("index.html", 
                            user = g.user,
-                           title="Youth Radio Intranet",
+                           title="Youth Radio Central",
                            songs=metricsServerRequest("/ADP/SONGS/PLAYED/?limit=10"),
                            last_thirty_mins=ltm,
                            last_twenty_four_hours = ltfh,
@@ -362,4 +422,10 @@ def metrics_ADP():
                            server_url=app.config["METRICS_SERVER_URL"],
                            lifetime_stats=lifetime)
 
-app.run(host='127.0.0.1', port=5001, debug=app.config["DEBUG"])
+if __name__ == "__main__":
+    app.debug = app.config["DEBUG"]
+    
+    if app.debug:
+        app.run(host=app.config["HOST"], port=app.config["PORT"])
+    else:
+        app.run()
