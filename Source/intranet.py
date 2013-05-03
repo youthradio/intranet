@@ -208,6 +208,26 @@ class Participant(Person):
     def __repr__(self):
         return "<Particpant %r>" % (self._id)
 
+
+def handleDateList(dates, strformat):
+    """ Function to return a date list in the passed strformat.
+
+    This function is a helper function that will return a list
+    of dates according to the supplied strformat.
+    """
+    dl = []
+
+    for d in dates:
+        #convertedDate = datetime.datetime(*(time.strptime(d[:-7].replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
+        convertedDate = datetime.datetime(*(time.strptime(d.replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
+        dl.append(getDateTimeAsString(
+                    dt = convertedDate,
+                    inTimezone = 'PST',
+                    withStringFormat = strformat))
+
+    return dl
+
+
 @app.route("/_getCurrentSessionsTotal", methods=["GET"])
 @auth.required
 def ajax_currentSessionTotals():
@@ -366,6 +386,49 @@ def ajax_avgListeningSessionsPerUser():
 
     return jsonify(ret)
 
+@app.route('/_getLastXminsOfSessions', methods=['GET'])
+def ajax_lastXminsOfSessions():
+    """ Ajax function to get the total number of sessions
+    per minute over the last X minutes.
+
+    Given a number passed in via the MINS get variable,
+    this method will return the number of sessions.
+    """
+    mins = request.args.get('mins')
+    ltm = metricsServerRequest("/ADP/SESSIONS/LAST" + str(mins) + "MINS/")
+    ltm["date_list"] = handleDateList(ltm["date_list"], '%I:%M %p')
+
+    return jsonify(ltm)
+
+@app.route('/_getLastXhoursOfListeners', methods=['GET'])
+def ajax_lastXhoursOfListeners():
+    """ Ajax function to get the total number of listeners
+    per hours over the last X hours.
+
+    Given a number passed in via the HOURS get variable,
+    this method will return the number of listeners.
+    """
+    hours = request.args.get('hours')
+    ltm = metricsServerRequest("/ADP/SESSIONS/LAST" + str(hours) + "HOURS/")
+    ltm["date_list"] = handleDateList(ltm["date_list"], '%I%p')
+
+    return jsonify(ltm)
+
+@app.route('/_getLastXdaysOfListeners', methods=['GET'])
+def ajax_lastXdaysOfListeners():
+    """ Ajax function to get the total number of listeners
+    per hours over the last X days.
+
+    Given a number passed in via the DAYS get variable,
+    this method will return the number of listeners.
+    """
+    days = request.args.get('days')
+    ltm = metricsServerRequest("/ADP/SESSIONS/LAST" + str(days) + "DAYS/")
+    ltm["date_list"] = handleDateList(ltm["date_list"], '%A')
+
+    return jsonify(ltm)
+
+
 @app.route("/")
 @app.route("/metrics/adp")
 @app.route("/metrics/adp/")
@@ -379,46 +442,15 @@ def metrics_ADP():
     # g.user.name and g.user.email.
     #return "You have rights to be here, %s (%s): %r" % (g.user.name, g.user.email, g.user)
 
-    def handleDateList(dates, strformat):
-        dl = []
-
-        for d in dates:
-            #convertedDate = datetime.datetime(*(time.strptime(d[:-7].replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
-            convertedDate = datetime.datetime(*(time.strptime(d.replace('T', ' '), '%Y-%m-%d %H:%M:%S')[0:6]))
-            dl.append(getDateTimeAsString(
-                        dt = convertedDate,
-                        inTimezone = 'PST',
-                        withStringFormat = strformat))
-
-        return dl
-
-
-    ltm = metricsServerRequest("/ADP/SESSIONS/LAST30MINS/")
-    ltfh = metricsServerRequest("/ADP/SESSIONS/LAST24HOURS/")
-    lsd = metricsServerRequest("/ADP/SESSIONS/LAST7DAYS/")
-
-
-    ltm["date_list"] = handleDateList(ltm["date_list"], '%I:%M %p')
-    ltfh["date_list"] = handleDateList(ltfh["date_list"], '%I%p')
-    lsd["date_list"] = handleDateList(lsd["date_list"], '%A')
 
     lifetime = {
-        "Total Listening Sessions (Including Bounced)": metricsServerRequest("/ADP/SESSIONS/TOTAL/")["Total"],
-        "Total Unique Listeners": metricsServerRequest("/ADP/LISTENER/TOTAL/")["Total"],
-        "Total Bounced (Listened for under 1 minute)": metricsServerRequest("/ADP/SESSIONS/BOUNCED/")["Total"],
-        "Total Current Sessions": metricsServerRequest("/ADP/SESSIONS/CURRENT/")["Total"],
-        "Total Songs Played": metricsServerRequest("/ADP/SONGS/TOTAL/"),
-        "Total Listener Hours": "%.2f" % round(metricsServerRequest("/ADP/LISTENER/HOURS/")["Total"], 2),
-        "Average Session Listening Time": "%.2f" % round(metricsServerRequest("/ADP/SESSIONS/AVGLISTENINGTIME/")["Overall"], 2)
+        "Total Songs Played": metricsServerRequest("/ADP/SONGS/TOTAL/")
     }
 
     return render_template("index.html", 
                            user = g.user,
                            title="Youth Radio Central",
                            songs=metricsServerRequest("/ADP/SONGS/PLAYED/?limit=10"),
-                           last_thirty_mins=ltm,
-                           last_twenty_four_hours = ltfh,
-                           last_seven_days = lsd,
                            server_url=app.config["METRICS_SERVER_URL"],
                            lifetime_stats=lifetime)
 

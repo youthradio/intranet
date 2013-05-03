@@ -94,49 +94,59 @@ $(document).ready(function() {
 /***
  * Update the average listening time once every 5 minutes.
  ****/
+function updateAvgListeningTime() {
+    $.ajax($SCRIPT_ROOT + '/_getAvgSessionListeningTime')
+     .done(function (result) {
+        overall_avg = result['Overall'];
+        $('#avg_listening_time span').text(roundNumber(overall_avg, 2));
+     })
+     .fail(function (result) {
+        console.log("Get Average Listening Time - Failing Gracefully: " + overall_avg);
+    });
+}
+
 $(document).ready(function() {
-    setInterval(function() {
-        $.ajax($SCRIPT_ROOT + '/_getAvgSessionListeningTime')
-         .done(function (result) {
-            overall_avg = result['Overall'];
-            $('#avg_listening_time span').text(roundNumber(overall_avg, 2));
-         })
-         .fail(function (result) {
-            console.log("Get Average Listening Time - Failing Gracefully: " + overall_avg);
-        });
-    }, 60000);
+    updateAvgListeningTime();
+    setInterval(updateAvgListeningTime, 60000);
 });
 
 /***
  * Get the total listening hours updated every minute.
  ****/
+function updateTotalListeningHours() {
+    $.ajax($SCRIPT_ROOT + '/_getTotalListenerHours')
+     .done(function (result) {
+        total_listener_hours = result['Total'];
+        $('#listener_hours span').text(roundNumber(total_listener_hours, 2));
+     })
+     .fail(function (result) {
+        console.log("Get Total Listener Hours - Failing Gracefully: " + total_listener_hours);
+    });
+}
+
 $(document).ready(function() {
-    setInterval(function() {
-        $.ajax($SCRIPT_ROOT + '/_getTotalListenerHours')
-         .done(function (result) {
-            total_listener_hours = result['Total'];
-            $('#listener_hours span').text(roundNumber(total_listener_hours, 2));
-         })
-         .fail(function (result) {
-            console.log("Get Total Listener Hours - Failing Gracefully: " + total_listener_hours);
-        });
-    }, 60000);
+    updateTotalListeningHours();
+    setInterval(updateTotalListeningHours, 60000);
 });
 
 /***
  * Get the average listening sessions per user updated every 5 minutes.
  ****/
+function updateAvgListeningSessionsPerUser() {
+    $.ajax($SCRIPT_ROOT + '/_getAvgListeningSessionsPerUser')
+     .done(function (result) {
+        sessions_per_user = result['Result'];
+        $('#sessions_per_user span').text(roundNumber(sessions_per_user, 2));
+     })
+     .fail(function (result) {
+        console.log("Get Sessions Per User - Failing Gracefully: " + sessions_per_user);
+    });
+}
+
+// Update the avg listening sessions upon load and then set an interval.
 $(document).ready(function() {
-    setInterval(function() {
-        $.ajax($SCRIPT_ROOT + '/_getAvgListeningSessionsPerUser')
-         .done(function (result) {
-            sessions_per_user = result['Result'];
-            $('#sessions_per_user span').text(roundNumber(sessions_per_user, 2));
-         })
-         .fail(function (result) {
-            console.log("Get Sessions Per User - Failing Gracefully: " + sessions_per_user);
-        });
-    }, 60000);
+    updateAvgListeningSessionsPerUser();
+    setInterval(updateAvgListeningSessionsPerUser, 60000);
 });
 
 
@@ -176,9 +186,9 @@ $(document).ready(function() {
             <div id="chart_total_numbers"></div>
             <div id="chart_bounce_rate"></div>
             <div id="stats_container">
-                <p id="listener_hours"><b>Total Listener Hours:</b> <span>{{ lifetime_stats['Total Listener Hours'] }}</span> hours</p>
-                <p id="avg_listening_time"><b>Avg Session Listening Time:</b> <span>{{ lifetime_stats['Average Session Listening Time'] }}</span> minutes</p>
-                <p id="sessions_per_user"><b>Listening Sessions per User:</b> <span>{{ ((lifetime_stats['Total Listening Sessions (Including Bounced)'] - lifetime_stats['Total Bounced (Listened for under 1 minute)']) / lifetime_stats['Total Unique Listeners'])|round(2, 'common') }}</span></p>
+                <p id="listener_hours"><b>Total Listener Hours:</b> <span>0</span> hours</p>
+                <p id="avg_listening_time"><b>Avg Session Listening Time:</b> <span>0</span> minutes</p>
+                <p id="sessions_per_user"><b>Listening Sessions per User:</b> <span>0</span></p>
             </div>
         </div>
         <div id="recent_graph_container">
@@ -231,8 +241,9 @@ $(function () {
                         var series = this.series[0],
                             bounced_sessions = series.points[0],
                             listening_sessions = series.points[1];
-                        setInterval(function() {
-                            // Get the total listening sessions...
+
+                        // Initialize the chart with the first bit of data
+                        function updateChart() { 
                             $.ajax($SCRIPT_ROOT + '/_getOverallTotalListeningSessions')
                              .done(function (result) {
                                 //alert("success");
@@ -243,7 +254,12 @@ $(function () {
                                 //alert("error " + result + " " + textStatus);
                                 console.log("Bounce Rate - Failing Gracefully: " + result)
                               });
-                        }, 60000);
+                        }
+
+                        updateChart();
+
+                        // Set up the constant refresh
+                        setInterval(updateChart, 60000);
                     }
                 }
             },
@@ -275,8 +291,8 @@ $(function () {
                 type: 'pie',
                 name: 'Total',
                 data: [
-                    ['Bounced Sessions', {{ lifetime_stats['Total Bounced (Listened for under 1 minute)'] }} ],
-                    ['Listening Sessions', {{ lifetime_stats['Total Listening Sessions (Including Bounced)'] - lifetime_stats['Total Bounced (Listened for under 1 minute)'] }} ]
+                    ['Bounced Sessions', 0],
+                    ['Listening Sessions', 1]
                 ]
             }]
         });
@@ -291,7 +307,9 @@ $(function () {
                         var series = this.series[0],
                             listening_sessions = series.points[0],
                             unique_listeners = series.points[1];
-                        setInterval(function() {
+
+                        // Set up the updating function
+                        function updateChart() {
                             // Get the total listening sessions...
                             $.ajax($SCRIPT_ROOT + '/_getOverallTotalListeningSessions')
                              .done(function (result) {
@@ -313,8 +331,13 @@ $(function () {
                                 //alert("error " + result + " " + textStatus);
                                 console.log("Unique Listeners Total - Failing Gracefully: " + result)
                               })
+                        }
 
-                        }, 60000);
+                        // Run the update
+                        updateChart();
+
+                        // Get things running on a schedule
+                        setInterval(updateChart, 60000);
                     }
                 }
             },
@@ -361,7 +384,7 @@ $(function () {
             },
             series: [{
                 name: 'Overall',
-                data: [{{ lifetime_stats['Total Listening Sessions (Including Bounced)'] - lifetime_stats['Total Bounced (Listened for under 1 minute)'] }}, {{ lifetime_stats['Total Unique Listeners'] }}]
+                data: [0, 0]
             }]
         });
 
@@ -380,7 +403,8 @@ $(function () {
                         var series = this.series[0],
                             point = series.points[0],
                             newVal;
-                        setInterval(function() {
+
+                        function updateChart() {
                             $.ajax($SCRIPT_ROOT + '/_getCurrentSessionsTotal')
                              .done(function (result) {
                                 //alert("success");
@@ -391,7 +415,11 @@ $(function () {
                                 //alert("error " + result + " " + textStatus);
                                 console.log("Current Sessions Total - Failing Gracefully: " + result)
                               })
-                        }, 60000);
+                        }
+
+                        updateChart();
+
+                        setInterval(updateChart, 60000);
                     }
                 }
             },
@@ -473,7 +501,7 @@ $(function () {
         
             series: [{
                 name: 'Sessions',
-                data: [{{ lifetime_stats['Total Current Sessions'] }}],
+                data: [0],
                 tooltip: {
                     valueSuffix: ' listeners'
                 }
@@ -484,8 +512,6 @@ $(function () {
 });
 
 $(function () {
-        var dl = {{ last_thirty_mins["date_list"]|safe }};
-
         var chart_recent_total_listeners = new Highcharts.Chart({
             chart: {
                 type: 'areaspline',
@@ -494,7 +520,41 @@ $(function () {
                     load: function() {
                         // set up the updating of the chart
                         var highQualitySeries = this.series[0],
-                            lowQualitySeries = this.series[1];
+                            lowQualitySeries = this.series[1],
+                            totalMinutes = 30;
+
+                        for (var i = 0; i < totalMinutes; i++) {
+                            highQualitySeries.addPoint(0);
+                            lowQualitySeries.addPoint(0);
+                        };
+
+                        // Set the initial data
+                        $.ajax($SCRIPT_ROOT + '/_getLastXminsOfSessions?mins=' + totalMinutes)
+                         .done(function (result) {
+                            // Iterate through the returned stuff...
+                            $.each(result['date_list'], function(index, dt) {
+                                var high = result['128K Shoutcast Server'][index],
+                                    low = result['56K Shoutcast Server'][index];
+
+                                // Update each of the points...
+                                highQualitySeries.points[index].update(high, false, false);
+                                lowQualitySeries.points[index].update(low, false, false);
+
+                                mins = chart_recent_total_listeners.xAxis[0].categories;
+
+                                // Do final updates...
+                                mins.push(dt);
+                                chart_recent_total_listeners.xAxis[0].setCategories(mins, false);
+                            });
+
+                            chart_recent_total_listeners.redraw();
+                          })
+                         .fail(function (result) {
+                            //alert("error " + result + " " + textStatus);
+                            console.log("Recent Minutes - Failing Gracefully: " + result)
+                          });
+
+                        // Now set the data to update automagically.
                         setInterval(function() {
                             $.ajax($SCRIPT_ROOT + '/_getCurrentSessionsTotal')
                              .done(function (result) {
@@ -523,14 +583,14 @@ $(function () {
                 }
             },
             title: {
-                text: 'Total Listeners'
+                text: 'Total Listening Sessions'
             },
             subtitle: {
-                text: 'Last {{ last_thirty_mins["56K Shoutcast Server"]|length }} Minutes'
+                text: ''
             },
             xAxis: {
                 type: 'category',
-                categories: dl,
+                categories: [],
                 title: {
                     enabled: false
                 },
@@ -566,13 +626,13 @@ $(function () {
             series: [{
                 stacking: 'normal',
                 name: '128K Current Listeners',
-                data: {{ last_thirty_mins["128K Shoutcast Server"] }},
+                data: [],
                 lineWidth: 3,
                 color: '#9ABD4B'
             }, {
                 stacking: 'normal',
                 name: '56K Current Listeners',
-                data: {{ last_thirty_mins["56K Shoutcast Server"] }},
+                data: [],
                 lineWidth: 3,
                 color: '#000000'
             }]
@@ -581,8 +641,6 @@ $(function () {
 
 
 $(function () {
-        var dl = {{ last_twenty_four_hours["date_list"]|safe }};
-
         var chart_last24hours_total_listeners = new Highcharts.Chart({
             chart: {
                 type: 'column',
@@ -592,8 +650,41 @@ $(function () {
                         // set up the updating of the chart
                         var highQualitySeries = this.series[0],
                             lowQualitySeries = this.series[1],
+                            totalHours = 24,
                             axis = this.xAxis,
                             categories = axis[0].categories;
+
+                        for (var i = 0; i < totalHours; i++) {
+                            highQualitySeries.addPoint(0);
+                            lowQualitySeries.addPoint(0);
+                        };
+
+                        // Set the initial data
+                        $.ajax($SCRIPT_ROOT + '/_getLastXhoursOfListeners?hours=' + totalHours)
+                         .done(function (result) {
+                            // Iterate through the returned stuff...
+                            $.each(result['date_list'], function(index, dt) {
+                                var high = result['128K Shoutcast Server'][index],
+                                    low = result['56K Shoutcast Server'][index];
+
+                                // Update each of the points...
+                                highQualitySeries.points[index].update(high, false, false);
+                                lowQualitySeries.points[index].update(low, false, false);
+
+                                hours = chart_last24hours_total_listeners.xAxis[0].categories;
+
+                                // Do final updates...
+                                hours.push(dt);
+                                chart_last24hours_total_listeners.xAxis[0].setCategories(hours, false);
+                            });
+
+                            chart_last24hours_total_listeners.redraw();
+                          })
+                         .fail(function (result) {
+                            //alert("error " + result + " " + textStatus);
+                            console.log("Recent Hours - Failing Gracefully: " + result)
+                          });
+
                         setInterval(function() {
                             $.ajax($SCRIPT_ROOT + '/_getListeningSessionsForThisHour')
                              .done(function (result) {
@@ -604,8 +695,8 @@ $(function () {
 
                                 // Do final updates...
                                 if (categories.slice(-1)[0] == currentHour) {
-                                    highQualitySeries.points[23].update(high, false, false);
-                                    lowQualitySeries.points[23].update(low, false, false);
+                                    highQualitySeries.points[totalHours - 1].update(high, false, false);
+                                    lowQualitySeries.points[totalHours - 1].update(low, false, false);
                                 } else {
                                     highQualitySeries.addPoint(high, false, true);
                                     lowQualitySeries.addPoint(low, false, true);
@@ -631,15 +722,13 @@ $(function () {
                 text: 'Total Listeners'
             },
             subtitle: {
-                text: 'Last {{ last_twenty_four_hours["56K Shoutcast Server"]|length }} Hours'
+                text: 'Last 24 Hours'
             },
             xAxis: {
                 type: 'category',
-                categories: dl,
+                categories: [],
                 title: {
-                    text: 'Hours'
-                },
-                title: {
+                    text: 'Hours',
                     enabled: true
                 }
             },
@@ -682,11 +771,11 @@ $(function () {
             },
             series: [{
                 name: '128K Current Listeners',
-                data: {{ last_twenty_four_hours["128K Shoutcast Server"] }},
+                data: [],
                 color: '#9ABD4B'
             }, {
                 name: '56K Current Listeners',
-                data: {{ last_twenty_four_hours["56K Shoutcast Server"] }},
+                data: [],
                 color: '#000000'
             }]
         });
@@ -694,8 +783,6 @@ $(function () {
 
 
 $(function () {
-        var dl = {{ last_seven_days["date_list"]|safe }};
-
         var chart_last7days_total_listeners = new Highcharts.Chart({
             chart: {
                 type: 'column',
@@ -706,7 +793,42 @@ $(function () {
                         var highQualitySeries = this.series[0],
                             lowQualitySeries = this.series[1],
                             axis = this.xAxis,
-                            categories = axis[0].categories;
+                            categories = axis[0].categories,
+                            totalDays = 7,
+                            lastElement = totalDays - 1;
+
+                        for (var i = 0; i < totalDays; i++) {
+                            highQualitySeries.addPoint(0);
+                            lowQualitySeries.addPoint(0);
+                        };
+
+                        // Set the initial data
+                        $.ajax($SCRIPT_ROOT + '/_getLastXdaysOfListeners?days=' + totalDays)
+                         .done(function (result) {
+                            // Iterate through the returned stuff...
+                            $.each(result['date_list'], function(index, dt) {
+                                var high = result['128K Shoutcast Server'][index],
+                                    low = result['56K Shoutcast Server'][index];
+
+                                // Update each of the points...
+                                highQualitySeries.points[index].update(high, false, false);
+                                lowQualitySeries.points[index].update(low, false, false);
+
+                                days = chart_last7days_total_listeners.xAxis[0].categories;
+
+                                // Do final updates...
+                                days.push(dt);
+                                chart_last7days_total_listeners.xAxis[0].setCategories(days, false);
+                            });
+
+                            chart_last7days_total_listeners.redraw();
+                          })
+                         .fail(function (result) {
+                            //alert("error " + result + " " + textStatus);
+                            console.log("Recent Hours - Failing Gracefully: " + result)
+                          });
+
+
                         setInterval(function() {
                             $.ajax($SCRIPT_ROOT + '/_getListeningSessionsForToday')
                              .done(function (result) {
@@ -717,8 +839,8 @@ $(function () {
 
                                 // Do final updates...
                                 if (categories.slice(-1)[0] == currentDay) {
-                                    highQualitySeries.points[6].update(high, false, false);
-                                    lowQualitySeries.points[6].update(low, false, false);
+                                    highQualitySeries.points[lastElement].update(high, false, false);
+                                    lowQualitySeries.points[lastElement].update(low, false, false);
                                 } else {
                                     highQualitySeries.addPoint(high, false, true);
                                     lowQualitySeries.addPoint(low, false, true);
@@ -746,11 +868,11 @@ $(function () {
                 text: 'Total Listeners'
             },
             subtitle: {
-                text: 'Last {{ last_seven_days["56K Shoutcast Server"]|length }} Days'
+                text: 'Last 7 Days'
             },
             xAxis: {
                 type: 'category',
-                categories: dl,
+                categories: [],
                 title: {
                     text: 'Days'
                 },
@@ -797,11 +919,11 @@ $(function () {
             },
             series: [{
                 name: '128K Current Listeners',
-                data: {{ last_seven_days["128K Shoutcast Server"] }},
+                data: [],
                 color: '#9ABD4B'
             }, {
                 name: '56K Current Listeners',
-                data: {{ last_seven_days["56K Shoutcast Server"] }},
+                data: [],
                 color: '#000000'
             }]
         });
