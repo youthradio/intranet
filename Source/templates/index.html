@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>{{ title }}</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
-        <link rel="stylesheet" href="/static/css/normalize.css">
-        <link rel="stylesheet" href="/static/css/main.css">
-        <script src="/static/js/vendor/modernizr-2.6.2.min.js"></script>
-
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-        <script src="/static/js/plugins.js"></script>
-        <script src="/static/js/main.js"></script>
-
+{% extends "base.html" %}
+{% block title %}{{ title }} - Youth Radio Central{% endblock %}
+{% block head %}
+{{ super() }}
         <script src="/static/js/highcharts/highcharts.js"></script>
         <script src="/static/js/highcharts/highcharts-more.js"></script>
         <script src="/static/js/highcharts/modules/exporting.js"></script>
@@ -33,42 +14,52 @@
 
         <script type="text/javascript">
 /***
- * roundNumber()
- *  A simple function to round a decimal to a specified
- *  number of decimal places.
- *
- *  Arguments: number to round, number of decimal places
- *  Returns: a float
+ * Update the average listening time once every 5 minutes.
  ****/
-function roundNumber(number, decimals) {
-    var newnumber = new Number(number+'').toFixed(parseInt(decimals));
-    return parseFloat(newnumber);
-};
+function updateAvgListeningTime() {
+    $.ajax($SCRIPT_ROOT + '/_getAvgSessionListeningTime')
+     .done(function (result) {
+        overall_avg = result['Overall'];
+        $('#avg_listening_time span').text(roundNumber(overall_avg, 2));
+     })
+     .fail(function (result) {
+        console.log("Get Average Listening Time - Failing Gracefully: " + overall_avg);
+    });
+}
 
 /***
- * hashCode()
- *  A simple function to determine a quick hash of a string.
- *
- *  Returns: a 32 bit integer
+ * Get the total listening hours updated every minute.
  ****/
-String.prototype.hashCode = function(){
-    var hash = 0, i, char;
-    if (this.length == 0) return hash;
-    for (i = 0; i < this.length; i++) {
-        char = this.charCodeAt(i);
-        hash = ((hash<<5)-hash)+char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-};
-        </script>
+function updateTotalListeningHours() {
+    $.ajax($SCRIPT_ROOT + '/_getTotalListenerHours')
+     .done(function (result) {
+        total_listener_hours = result['Total'];
+        $('#listener_hours span').text(roundNumber(total_listener_hours, 2));
+     })
+     .fail(function (result) {
+        console.log("Get Total Listener Hours - Failing Gracefully: " + total_listener_hours);
+    });
+}
 
-        <script type="text/javascript">
 /***
- * Update current song playing via ajax method that fires
- * every 30 seconds.
+ * Get the average listening sessions per user updated every 5 minutes.
  ****/
+function updateAvgListeningSessionsPerUser() {
+    $.ajax($SCRIPT_ROOT + '/_getAvgListeningSessionsPerUser')
+     .done(function (result) {
+        sessions_per_user = result['Result'];
+        $('#sessions_per_user span').text(roundNumber(sessions_per_user, 2));
+     })
+     .fail(function (result) {
+        console.log("Get Sessions Per User - Failing Gracefully: " + sessions_per_user);
+    });
+}
+
 $(document).ready(function() {
+    /***
+     * Update current song playing via ajax method that fires
+     * every 30 seconds.
+     ****/
     if ( $("#songs li").length ) {
         setInterval(function() {
             // Get the total listening sessions...
@@ -89,82 +80,23 @@ $(document).ready(function() {
         }, 30000);
 
     }
-});
 
-/***
- * Update the average listening time once every 5 minutes.
- ****/
-function updateAvgListeningTime() {
-    $.ajax($SCRIPT_ROOT + '/_getAvgSessionListeningTime')
-     .done(function (result) {
-        overall_avg = result['Overall'];
-        $('#avg_listening_time span').text(roundNumber(overall_avg, 2));
-     })
-     .fail(function (result) {
-        console.log("Get Average Listening Time - Failing Gracefully: " + overall_avg);
-    });
-}
-
-$(document).ready(function() {
+    // Do the initial setups...
     updateAvgListeningTime();
     setInterval(updateAvgListeningTime, 60000);
-});
 
-/***
- * Get the total listening hours updated every minute.
- ****/
-function updateTotalListeningHours() {
-    $.ajax($SCRIPT_ROOT + '/_getTotalListenerHours')
-     .done(function (result) {
-        total_listener_hours = result['Total'];
-        $('#listener_hours span').text(roundNumber(total_listener_hours, 2));
-     })
-     .fail(function (result) {
-        console.log("Get Total Listener Hours - Failing Gracefully: " + total_listener_hours);
-    });
-}
-
-$(document).ready(function() {
     updateTotalListeningHours();
     setInterval(updateTotalListeningHours, 60000);
-});
 
-/***
- * Get the average listening sessions per user updated every 5 minutes.
- ****/
-function updateAvgListeningSessionsPerUser() {
-    $.ajax($SCRIPT_ROOT + '/_getAvgListeningSessionsPerUser')
-     .done(function (result) {
-        sessions_per_user = result['Result'];
-        $('#sessions_per_user span').text(roundNumber(sessions_per_user, 2));
-     })
-     .fail(function (result) {
-        console.log("Get Sessions Per User - Failing Gracefully: " + sessions_per_user);
-    });
-}
-
-// Update the avg listening sessions upon load and then set an interval.
-$(document).ready(function() {
     updateAvgListeningSessionsPerUser();
-    setInterval(updateAvgListeningSessionsPerUser, 60000);
+    setInterval(updateAvgListeningSessionsPerUser, 600000);
 });
-
 
         </script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-        <div id="yr_header">
-            <div id="yr_status_bar">
-                <table>
-                    <tr><td align="left">( Metrics Server: {{ server_url }} )</td><td align="right">Welcome, {{ user.name }}</td></tr>
-                </table>
-            </div>
-            <img src="/static/img/YR_final_large.jpg" style="margin: 0px; width: 1000px;" />
-        </div>
-
+{% endblock %}
+{% block left_status %}( Metrics Server: {{ server_url }} ){% endblock %}
+{% block right_status %}Welcome, {{ user.name }}{% endblock %}
+{% block page_content %}
         <div id="list_container">
             <div class="list">
                 <h1>Last {{ songs|length }} Songs Played</h1>
@@ -197,7 +129,9 @@ $(document).ready(function() {
             <div id="chart_last24hours_total_listeners"></div>
             <div id="chart_last7days_total_listeners"></div>
         </div>
-
+{% endblock %}
+{% block page_bottom %}
+{{ super() }}
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
@@ -928,6 +862,5 @@ $(function () {
             }]
         });
     });
-        </script>        
-    </body>
-</html>
+        </script>
+{% endblock %}
