@@ -27,14 +27,14 @@ def handleDateList(dates, strformat):
     return dl
 
 
-def metricsServerRequest(url):
+def metricsServerRequest(method):
     """ Connect to the metrics server and return a result.
 
     This function returns JSON from the metrics server
     using the configuration variables given in the configuration
     file.
     """
-    returned_json = urllib2.urlopen(METRICS_SERVER_URL + url).read()
+    returned_json = urllib2.urlopen(METRICS_SERVER_URL + method).read()
     ret = json.loads(returned_json)
     return ret['Result']
 
