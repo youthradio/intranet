@@ -7,8 +7,7 @@ import urllib2, urllib, json, sys
 import forms
 
 from yrAPI import *
-from util_metrics import *
-from ajax_adp_metrics import *
+from metricsAPI import *
 
 # Setup Flask
 app = Flask(__name__, instance_relative_config=True)
@@ -19,23 +18,24 @@ app.config.from_pyfile('intranet_cfg.py', silent=False)
 auth = GoogleFederated("youthradio.org", app)
 
 # Set up the Youth Radio API Object
-api = yrAPI(url=YR_API_SERVER_URL)
+api = yrAPI(url=app.config['YR_API_SERVER_URL'])
+metrics = MetricsAPI(url=app.config['METRICS_SERVER_URL'], request=request)
 
 """
 Set the AllDayPlay AJAX URL Rules
 """
-app.add_url_rule('/metrics/adp/_getCurrentSessionsTotal', 'ajax_currentSessionTotals', auth.required(ajax_currentSessionTotals), methods=["GET"])
-app.add_url_rule('/metrics/adp/_getOverallTotalListeningSessions', 'ajax_overallTotalListeningSessions', auth.required(ajax_overallTotalListeningSessions), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getOverallUniqueListeners', 'ajax_overallUniqueListeners', auth.required(ajax_overallUniqueListeners), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getListeningSessionsForThisHour', 'ajax_listeningSessionsForThisHour', auth.required(ajax_listeningSessionsForThisHour), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getListeningSessionsForToday', 'ajax_listeningSessionsForToday', auth.required(ajax_listeningSessionsForToday), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getCurrentPlayingSong', 'ajax_currentPlayingSong', auth.required(ajax_currentPlayingSong), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getAvgSessionListeningTime', 'ajax_avgSessionListeningTime', auth.required(ajax_avgSessionListeningTime), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getTotalListenerHours', 'ajax_totalListenerHours', auth.required(ajax_totalListenerHours), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getAvgListeningSessionsPerUser', 'ajax_avgListeningSessionsPerUser', auth.required(ajax_avgListeningSessionsPerUser), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getLastXminsOfSessions', 'ajax_lastXminsOfSessions', auth.required(ajax_lastXminsOfSessions), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getLastXhoursOfListeners', 'ajax_lastXhoursOfListeners', auth.required(ajax_lastXhoursOfListeners), methods=['GET'])
-app.add_url_rule('/metrics/adp/_getLastXdaysOfListeners', 'ajax_lastXdaysOfListeners', auth.required(ajax_lastXdaysOfListeners), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getCurrentSessionsTotal', 'ajax_currentSessionTotals', auth.required(metrics.ajaxCurrentSessionTotals), methods=["GET"])
+app.add_url_rule('/metrics/adp/_getOverallTotalListeningSessions', 'ajax_overallTotalListeningSessions', auth.required(metrics.ajaxOverallTotalListeningSessions), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getOverallUniqueListeners', 'ajax_overallUniqueListeners', auth.required(metrics.ajaxOverallUniqueListeners), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getListeningSessionsForThisHour', 'ajax_listeningSessionsForThisHour', auth.required(metrics.ajaxListeningSessionsForThisHour), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getListeningSessionsForToday', 'ajax_listeningSessionsForToday', auth.required(metrics.ajaxListeningSessionsForToday), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getCurrentPlayingSong', 'ajax_currentPlayingSong', auth.required(metrics.ajaxCurrentPlayingSong), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getAvgSessionListeningTime', 'ajax_avgSessionListeningTime', auth.required(metrics.ajaxAvgSessionListeningTime), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getTotalListenerHours', 'ajax_totalListenerHours', auth.required(metrics.ajaxTotalListenerHours), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getAvgListeningSessionsPerUser', 'ajax_avgListeningSessionsPerUser', auth.required(metrics.ajaxAvgListeningSessionsPerUser), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getLastXminsOfSessions', 'ajax_lastXminsOfSessions', auth.required(metrics.ajaxLastXminsOfSessions), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getLastXhoursOfListeners', 'ajax_lastXhoursOfListeners', auth.required(metrics.ajaxLastXhoursOfListeners), methods=['GET'])
+app.add_url_rule('/metrics/adp/_getLastXdaysOfListeners', 'ajax_lastXdaysOfListeners', auth.required(metrics.ajaxLastXdaysOfListeners), methods=['GET'])
 
 @app.route("/")
 @app.route("/metrics/adp")
@@ -52,13 +52,13 @@ def metrics_adp():
 
 
     lifetime = {
-        "Total Songs Played": metricsServerRequest("/ADP/SONGS/TOTAL/")
+        "Total Songs Played": metrics.serverRequest("/ADP/SONGS/TOTAL/")
     }
 
     return render_template("adp_overall_metrics.html",
                            user=g.user, 
                            title="AllDayPlay Metrics",
-                           songs=metricsServerRequest("/ADP/SONGS/PLAYED/?limit=10"),
+                           songs=metrics.serverRequest("/ADP/SONGS/PLAYED/?limit=10"),
                            server_url=app.config["METRICS_SERVER_URL"],
                            lifetime_stats=lifetime)
 
