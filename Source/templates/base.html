@@ -21,7 +21,6 @@
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
         <script src="/static/js/plugins.js"></script>
         <script src="/static/js/main.js"></script>
-
         {% endblock %}
     </head>
     <body>
@@ -37,6 +36,15 @@
             </div>
             <img src="/static/img/YR_final_large.jpg" style="margin: 0px; width: 1000px;" />
         </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div id="error_messages">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
         {% endblock %}
 
         {% block page_content %}

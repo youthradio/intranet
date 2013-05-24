@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Youth Radio Central{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block left_status %}{{ title }}{% endblock %}
+{% block right_status %}Welcome, {{ user.name }}{% endblock %}
+{% block page_content %}
+        <h1>{{ title }}</h1>
+        <div id="form_container">
+            <form action="{{ request.path }}" method="post" name="add_person">
+                {{ form.hidden_tag() }}
+                <p>
+                    <span class="styled-select">
+                        {{ form.person_type() }}
+                    </span>
+                </p>
+                <p>
+                    {{ form.first_name(size=15, placeholder="First Name") }} 
+                    {{ form.middle_initial(size=1, placeholder="M.I.") }} 
+                    {{ form.last_name(size=15, placeholder="Last Name") }}
+                </p>
+                <p>
+                    {{ form.dob(size=8, placeholder="Date of Birth") }}
+                    <span class="explain">(ex: 12/12/99)</span>
+                </p>
+                <p>
+                    {{ form.phone_home(size=10, placeholder="Home Phone") }} 
+                    {{ form.phone_cell(size=10, placeholder="Cell Phone") }}
+                    <span class="explain">(ex: 510-251-1101)</span>
+                </p>
+                <p>
+                    {{ form.address_street_1(size=20, placeholder="Street Address 1") }}
+                </p>
+                <p>
+                    {{ form.address_street_2(size=20, placeholder="Street Address 2") }}
+                </p>
+                <p>
+                    {{ form.address_city(size=20, placeholder="City") }}
+                    <span class="styled-select">
+                        {{ form.address_state() }}
+                    </span>
+                </p>
+                <p>
+                    {{ form.emergency_contact_relationship(size=26, placeholder="Relationship to Emergency Contact") }}
+                    <span class="explain">(ex: Mother, Husband, etc)</span>
+                </p>
+                <p>
+                    {{ form.emergency_contact_name(size=26, placeholder="Full Name of Emergency Contact") }}
+                </p>
+                <p>
+                    {{ form.emergency_contact_address(size=45, placeholder="Full Address of Emergency Contact") }}
+                </p>
+                <p>
+                    {{ form.emergency_contact_phone_home(size=10, placeholder="Home Phone") }} 
+                    {{ form.emergency_contact_phone_cell(size=10, placeholder="Cell Phone") }}
+                    <span class="explain">(ex: 510-251-1101)</span>
+                </p>
+                <p>
+                    {{ form.extension(size=15, placeholder="Job Title") }}
+                    {{ form.department(size=15, placeholder="Department") }}
+                </p>
+                <p>
+                    {{ form.supervisor(size=15, placeholder="Supervisor") }}
+                </p>
+                <p>
+                    {{ form.extension(size=5, placeholder="Extension") }}
+                    <span class="explain">(The employee's extension)</span>
+                </p>
+                <p>{{ form.add_person(text="Add Person")}}</p>
+            </form>
+        </div>
+{% endblock %}
+{% block page_bottom %}
+{{ super() }}
+
+{% endblock %}

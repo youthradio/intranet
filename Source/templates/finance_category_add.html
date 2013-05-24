@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Youth Radio Central{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block left_status %}{{ title }}{% endblock %}
+{% block right_status %}Welcome, {{ user.name }}{% endblock %}
+{% block page_content %}
+        <h1>{{ title }}</h1>
+        <div id="form_container">
+            <form action="{{ request.path }}" method="post" name="add_department">
+                {{ form.hidden_tag() }}
+                <p>
+                    <span class="styled-select">
+                        {{ form.category() }}
+                    </span>
+                    {{ form.new_category(size=15, placeholder="New Category") }} 
+                </p>
+                <p>
+                    <span class="styled-select">
+                        {{ form.subcategory1() }}
+                    </span>
+                    {{ form.new_subcategory1(size=15, placeholder="New Subcategory") }} 
+                </p>
+                <p>{{ form.new_subcategory2(size=15, placeholder="New PO Category")}}</p>
+
+                <p>{{ form.add_category()}}</p>
+            </form>
+        </div>
+{% endblock %}
+{% block page_bottom %}
+{{ super() }}
+
+{% endblock %}
