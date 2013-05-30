@@ -56,13 +56,13 @@ def metrics_adp():
 
 
     lifetime = {
-        "Total Songs Played": metrics.serverRequest("/ADP/SONGS/TOTAL/")
+        "Total Songs Played": metrics.serverRequest("/adp/songs/total")
     }
 
     return render_template("adp_overall_metrics.html",
                            user=g.user, 
                            title="AllDayPlay Metrics",
-                           songs=metrics.serverRequest("/ADP/SONGS/PLAYED/?limit=10"),
+                           songs=metrics.serverRequest("/adp/songs/played?limit=10"),
                            server_url=app.config["METRICS_SERVER_URL"],
                            lifetime_stats=lifetime)
 

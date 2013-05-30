@@ -107,6 +107,28 @@ class ADPMetricsViews(object):
         self.yr_api = yr_api
         self.metrics_api = metrics_api
 
+    def metrics_adp(self):
+        """ The metrics for All Day Play.
+
+        This function returns the metrics screen for All Day Play.
+        """
+        # Once user is authenticated, his name and email are accessible as
+        # g.user.name and g.user.email.
+        #return "You have rights to be here, %s (%s): %r" % (g.user.name, g.user.email, g.user)
+
+
+        lifetime = {
+            "Total Songs Played": metrics.serverRequest("/adp/songs/total")
+        }
+
+        return render_template("adp_overall_metrics.html",
+                               user=g.user, 
+                               title="AllDayPlay Metrics",
+                               songs=metrics.serverRequest("/adp/songs/played?limit=10"),
+                               server_url=app.config["METRICS_SERVER_URL"],
+                               lifetime_stats=lifetime)
+
+
     def ajaxCurrentSessionTotals(self):
         """ Ajax function to return the current number of sessions.
 
@@ -122,7 +144,7 @@ class ADPMetricsViews(object):
         strformat = request.args.get('strformat') if request.args.get('strformat') else '%I:%M<br>%p'
 
         # Perform the API request.
-        ret = metrics.serverRequest('/ADP/SESSIONS/CURRENT/')
+        ret = metrics.serverRequest('/adp/sessions/current')
 
         ret['Date'] = getDateTimeAsString(dt = datetime.datetime.utcnow(),
                                           inTimezone = tzinfo,
@@ -138,8 +160,8 @@ class ADPMetricsViews(object):
         """
         metrics = self.metrics_api
 
-        totalSessions = metrics.serverRequest('/ADP/SESSIONS/TOTAL')
-        totalBounced = metrics.serverRequest('/ADP/SESSIONS/BOUNCED')
+        totalSessions = metrics.serverRequest('/adp/sessions/total')
+        totalBounced = metrics.serverRequest('/adp/sessions/bounced')
 
         ret = {
             '128K Shoutcast Server': {
@@ -166,7 +188,7 @@ class ADPMetricsViews(object):
         """
         metrics = self.metrics_api
 
-        ret = metrics.serverRequest('/ADP/LISTENER/TOTAL')
+        ret = metrics.serverRequest('/adp/listener/total')
 
         return jsonify(ret)
 
@@ -180,7 +202,7 @@ class ADPMetricsViews(object):
         """
         metrics = self.metrics_api
 
-        ret = metrics.serverRequest('/ADP/SESSIONS/LAST1HOURS/')
+        ret = metrics.serverRequest('/adp/sessions/last1hours')
 
         # Convert the date to the hour string.
         ret["Hour"] = getDateTimeAsString(dt = ret["date_list"][0], withStringFormat = '%I%p')
@@ -196,7 +218,7 @@ class ADPMetricsViews(object):
         """
         metrics = self.metrics_api
 
-        ret = metrics.serverRequest('/ADP/SESSIONS/LAST1DAYS/')
+        ret = metrics.serverRequest('/adp/sessions/last1days')
 
         # Convert the date to the hour string.
         ret["Day"] = getDateTimeAsString(dt = ret["date_list"][0], withStringFormat = '%A')
@@ -211,7 +233,7 @@ class ADPMetricsViews(object):
         """
         metrics = self.metrics_api
 
-        one_song = metrics.serverRequest("/ADP/SONGS/PLAYED/?limit=1")
+        one_song = metrics.serverRequest("/adp/songs/played?limit=1")
 
         ret = {"song": one_song[0]}
 
@@ -226,7 +248,7 @@ class ADPMetricsViews(object):
         """
         metrics = self.metrics_api
 
-        ret = metrics.serverRequest("/ADP/SESSIONS/AVGLISTENINGTIME/")
+        ret = metrics.serverRequest("/adp/sessions/avglisteningtime")
 
         return jsonify(ret)
 
@@ -239,7 +261,7 @@ class ADPMetricsViews(object):
         """
         metrics = self.metrics_api
 
-        ret = metrics.serverRequest("/ADP/LISTENER/HOURS/")
+        ret = metrics.serverRequest("/adp/listener/hours")
 
         return jsonify(ret)
 
@@ -253,9 +275,9 @@ class ADPMetricsViews(object):
         ret = {}
         metrics = self.metrics_api
 
-        ret["Total Listeners"] = float(metrics.serverRequest("/ADP/LISTENER/TOTAL/")["Total"])
-        ret["Total Sessions"] = float(metrics.serverRequest("/ADP/SESSIONS/TOTAL/")["Total"])
-        ret["Total Bounced"] = float(metrics.serverRequest("/ADP/SESSIONS/BOUNCED/")["Total"])
+        ret["Total Listeners"] = float(metrics.serverRequest("/adp/listener/total")["Total"])
+        ret["Total Sessions"] = float(metrics.serverRequest("/adp/sessions/total")["Total"])
+        ret["Total Bounced"] = float(metrics.serverRequest("/adp/sessions/bounced")["Total"])
         ret["Result"] = float("%.2f" % round((ret["Total Sessions"] - ret["Total Bounced"]) / ret["Total Listeners"], 2))
 
         return jsonify(ret)
@@ -271,7 +293,7 @@ class ADPMetricsViews(object):
         request = self.request
         
         mins = request.args.get('mins')
-        ltm = metrics.serverRequest("/ADP/SESSIONS/LAST" + str(mins) + "MINS/")
+        ltm = metrics.serverRequest("/adp/sessions/last" + str(mins) + "mins")
         ltm["date_list"] = handleDateList(ltm["date_list"], '%I:%M %p')
 
         return jsonify(ltm)
@@ -287,7 +309,7 @@ class ADPMetricsViews(object):
         metrics = self.metrics_api
         
         hours = request.args.get('hours')
-        ltm = metrics.serverRequest("/ADP/SESSIONS/LAST" + str(hours) + "HOURS/")
+        ltm = metrics.serverRequest("/adp/sessions/last" + str(hours) + "hours")
         ltm["date_list"] = handleDateList(ltm["date_list"], '%I%p')
 
         return jsonify(ltm)
@@ -303,7 +325,7 @@ class ADPMetricsViews(object):
         metrics = self.metrics_api
         
         days = request.args.get('days')
-        ltm = metrics.serverRequest("/ADP/SESSIONS/LAST" + str(days) + "DAYS/")
+        ltm = metrics.serverRequest("/adp/sessions/last" + str(days) + "days")
         ltm["date_list"] = handleDateList(ltm["date_list"], '%A')
 
         return jsonify(ltm)
