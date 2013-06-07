@@ -1,4 +1,4 @@
-import urllib2, urllib, json
+import urllib2, urllib, json, requests
 
 class yrAPI(object):
     """Youth Radio API wrapper methods."""
@@ -7,29 +7,21 @@ class yrAPI(object):
         super(yrAPI, self).__init__()
 
 
-    def serverRequest(self, method, data=None):
+    def serverRequest(self, api_method, request_method='GET', data=None):
         """ Connect to the Youth Radio API server and return a result.
 
         This function returns JSON from the API server
         using the configuration variables given in the configuration
         file.
         """
-        if data:
-            # This is a post request.
-            # Prepare the data.
-            encoded_data = urllib.urlencode(data)
+        if request_method.upper() == 'GET':
+            response = requests.get(self.server_url + api_method, params=data, allow_redirects=True)
+        elif request_method.upper() == 'POST':
+            headers = {'content-type': 'application/x-www-form-urlencoded'}
+            response = requests.post(self.server_url + api_method, data=data, allow_redirects=True, headers=headers)
 
-            # Prepare the request.
-            request = urllib2.Request(self.server_url + method, encoded_data)
-        else:
-            # This is a get request.
-            request = urllib2.Request(self.server_url + method)
+        return response.json()
 
-        # Send the request.
-        response = urllib2.urlopen(request).read()
-        ret = json.loads(response)
-
-        return ret
 
     def getPurchaseOrderCategories(self, level, asTuples=False):
         """ Get the categories for purchase orders.
@@ -38,12 +30,12 @@ class yrAPI(object):
         whether to return the base category, subcategory1, or
         subcategory2.
 
-        asTuples: a boolean regarding to return the results as 
-        tuples to used with WTForms or just a plain list.
+        asTuples: a boolean to return the results as 
+        tuples to be used with WTForms or just a plain list.
         """
         # Get the categories from the API
-        api_query_result = self.serverRequest('/finance/cat/list/%s' % str(level))
-        categories = []
+        api_query_result = self.serverRequest('/finance/cat/list/%i' % level)
+        api_categories = categories = []
 
         if api_query_result and api_query_result['Status'] == "OK":
             api_categories = api_query_result['Response']
@@ -56,3 +48,27 @@ class yrAPI(object):
             categories = api_categories
 
         return categories
+
+    def getPeople(self, type="all", WTFormat=False):
+        """ Get people from the database.
+
+        type: This can be three different values -
+        staff, participant, all
+
+        WTFormat: a boolean to return the results as
+        tuples to be used with WTForms or just a plain list.
+        """
+        # Get the people from the API
+        api_query_result = self.serverRequest('/people/%s/list' % type)
+        api_people = people = []
+
+        if api_query_result and api_query_result['Status'] == 'OK':
+            api_people = api_query_result['People']
+
+        if WTFormat:
+            for person in api_people:
+                people.append((person['_id'], '%s %s' % (person['first_name'], person['last_name'])))
+        else:
+            people = api_people
+
+        return people

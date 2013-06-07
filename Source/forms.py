@@ -1,7 +1,7 @@
 from flask.ext.wtf import Form, TextField, DateField, SelectField, BooleanField, SubmitField, validators
 
 US_STATES = [
-    ("None", "State"), ("AK", "Alaska"), ("AL", "Alabama"), ("AS", "American Samoa"),
+    ("", "State"), ("AK", "Alaska"), ("AL", "Alabama"), ("AS", "American Samoa"),
     ("AZ", "Arizona"), ("AR", "Arkansas"), ("CA", "California"), ("CO", "Colorado"),
     ("CT", "Connecticut"), ("DE", "Delaware"), ("DC", "District of Columbia"), ("FL", "Florida"),
     ("GA", "Georgia"), ("GU", "Guam"), ("HI", "Hawaii"), ("ID", "Idaho"), ("IA", "Iowa"),
@@ -20,6 +20,14 @@ US_STATES = [
 
 PERSON_TYPE = [
     ("staff", "Staff")
+]
+
+GENDER = [
+    ("", "Gender"),
+    ("M", "Male"),
+    ("F", "Female"),
+    ("MTF", "Male-to-Female"),
+    ("FTM", "Female-to-Male")
 ]
 
 class AddPOCategory(Form):
@@ -75,8 +83,14 @@ class AddPerson(Form):
     last_name = TextField('last_name', validators=[
         validators.Required(message=(u'Last name is required.'))
     ])
-    dob = DateField('dob', format='%m/%d/%y', validators=[
+    dob = TextField('dob', validators=[
         validators.Optional()
+    ])
+    email = TextField('email', validators=[
+        validators.Required(message=(u'Email address is required. It must be a @youthradio.org address.'))
+    ])
+    gender = SelectField('gender', choices=GENDER, validators=[
+        validators.Required(message=(u'You must choose a gender.'))
     ])
 
     # Contact information
@@ -86,19 +100,20 @@ class AddPerson(Form):
     phone_cell = TextField('phone_cell', validators=[
         validators.Optional()
     ])
-    address_street_1 = TextField('address_street_1', validators=[
+
+    street_address_1 = TextField('street_address_1', validators=[
         validators.Optional()
     ])
-    address_street_2 = TextField('address_street_2', validators=[
+    street_address_2 = TextField('street_address_2', validators=[
         validators.Optional()
     ])
-    address_city = TextField('address_city', validators=[
+    city = TextField('city', validators=[
         validators.Optional()
     ])
-    address_state = SelectField('address_state', choices=US_STATES, validators=[
+    state = SelectField('state', choices=US_STATES, validators=[
         validators.Optional()
     ])
-    address_zip = TextField('address_zip', validators=[
+    zipcode = TextField('zipcode', validators=[
         validators.Optional()
     ])
 
@@ -126,7 +141,7 @@ class AddPerson(Form):
     department = TextField('department', validators=[
         validators.Optional()
     ])
-    supervisor = TextField('supervisor', validators=[
+    supervisor = SelectField('supervisor', validators=[
         validators.Optional()
     ])
     title = TextField('title', validators=[

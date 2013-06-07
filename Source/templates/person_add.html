@@ -15,14 +15,22 @@
                         {{ form.person_type() }}
                     </span>
                 </p>
+                <hr />
                 <p>
                     {{ form.first_name(size=15, placeholder="First Name") }} 
                     {{ form.middle_initial(size=1, placeholder="M.I.") }} 
                     {{ form.last_name(size=15, placeholder="Last Name") }}
                 </p>
                 <p>
+                    <span class="styled-select">
+                        {{ form.gender() }}
+                    </span>&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ form.dob(size=8, placeholder="Date of Birth") }}
                     <span class="explain">(ex: 12/12/99)</span>
+                </p>
+                <p>
+                    {{ form.email(size=20, placeholder="Email Address") }}
+                    <span class="explain">(It must be @youthradio.org)</span>
                 </p>
                 <p>
                     {{ form.phone_home(size=10, placeholder="Home Phone") }} 
@@ -30,17 +38,35 @@
                     <span class="explain">(ex: 510-251-1101)</span>
                 </p>
                 <p>
-                    {{ form.address_street_1(size=20, placeholder="Street Address 1") }}
+                    {{ form.title(size=23, placeholder="Job Title") }}
+                    {{ form.department(size=15, placeholder="Department") }}
                 </p>
                 <p>
-                    {{ form.address_street_2(size=20, placeholder="Street Address 2") }}
-                </p>
-                <p>
-                    {{ form.address_city(size=20, placeholder="City") }}
                     <span class="styled-select">
-                        {{ form.address_state() }}
+                        {{ form.supervisor() }}
                     </span>
                 </p>
+                <p>
+                    {{ form.extension(size=5, placeholder="Extension") }}
+                    <span class="explain">(ex: 301)</span>
+                </p>
+                <hr />
+                <p>
+                    {{ form.street_address_1(size=20, placeholder="Street Address 1") }}
+                </p>
+                <p>
+                    {{ form.street_address_2(size=20, placeholder="Street Address 2") }}
+                </p>
+                <p>
+                    {{ form.city(size=20, placeholder="City") }}
+                    <span class="styled-select">
+                        {{ form.state() }}
+                    </span>
+                </p>
+                <p>
+                    {{ form.zipcode(size=20, placeholder="Zip Code") }}
+                </p>
+                <hr />
                 <p>
                     {{ form.emergency_contact_relationship(size=26, placeholder="Relationship to Emergency Contact") }}
                     <span class="explain">(ex: Mother, Husband, etc)</span>
@@ -55,17 +81,6 @@
                     {{ form.emergency_contact_phone_home(size=10, placeholder="Home Phone") }} 
                     {{ form.emergency_contact_phone_cell(size=10, placeholder="Cell Phone") }}
                     <span class="explain">(ex: 510-251-1101)</span>
-                </p>
-                <p>
-                    {{ form.extension(size=15, placeholder="Job Title") }}
-                    {{ form.department(size=15, placeholder="Department") }}
-                </p>
-                <p>
-                    {{ form.supervisor(size=15, placeholder="Supervisor") }}
-                </p>
-                <p>
-                    {{ form.extension(size=5, placeholder="Extension") }}
-                    <span class="explain">(The employee's extension)</span>
                 </p>
                 <p>{{ form.add_person(text="Add Person")}}</p>
             </form>

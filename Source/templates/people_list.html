@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Youth Radio Central{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block left_status %}{{ title }}{% endblock %}
+{% block right_status %}Welcome, {{ user.name }}{% endblock %}
+{% block page_content %}
+        <h1>{{ title }}</h1>
+        <div id="people_list">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Ext</th>
+                    <th>Email</th>
+                    <th>Cell</th>
+                    <th>Home</th>
+                </tr>
+                {% for person in people %}
+                <tr>
+                    <td>{{ person['first_name'] }} {{ person['last_name'] }}</td>
+                    <td>{% if person['extension'] != None %}{{ person['extension'] }}{% endif %}</td>
+                    <td>{% if person['email'] != None %}{{ person['email'] }}{% endif %}</td>
+                    <td>{% if person['phone']['cell'] != None %}{{ person['phone']['cell'] }}{% endif %}</td>
+                    <td>{% if person['phone']['home'] != None %}{{ person['phone']['home'] }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+{% endblock %}
+{% block page_bottom %}
+{{ super() }}
+
+{% endblock %}

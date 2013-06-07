@@ -179,6 +179,29 @@ h1 {
 }
 
 /* ==============================
+   People List
+   ============================== */
+
+#people_list {
+    display: block;
+    width: 100%;
+}
+
+#people_list table {
+    width: 100%;
+}
+
+#people_list th {
+    text-align: left;
+    border-bottom: 1px solid black;
+}
+
+#people_list td {
+    text-align: left;
+    border-bottom: 1px dotted black;
+}
+
+/* ==============================
    Metrics
    ============================== */
 
