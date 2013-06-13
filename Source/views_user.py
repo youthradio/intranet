@@ -87,7 +87,9 @@ class UserViews(object):
         form.populateFormFields(obj=api_person['address'])
         form.populateFormFields(obj=api_person['emergency_contact'], prefix='emergency_contact_')
         form.populateFormFields(obj=api_person['emergency_contact']['phone'], prefix='emergency_contact_phone_')
+
         form.person_id.data = _id
+        form.zipcode.data = api_person['address']['zip']
 
         return render_template("person_add.html",
                                user=g.user,
