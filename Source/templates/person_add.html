@@ -82,7 +82,10 @@
                     {{ form.emergency_contact_phone_cell(size=10, placeholder="Cell Phone") }}
                     <span class="explain">(ex: 510-251-1101)</span>
                 </p>
-                <p>{{ form.add_person(text="Add Person")}}</p>
+                <p>{{ form.submit()}}</p>
+                {% if title == 'Edit Person' %}
+                {{ form.person_id }}
+                {% endif %}
             </form>
         </div>
 {% endblock %}

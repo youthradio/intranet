@@ -18,10 +18,10 @@ class FinanceViews(object):
         form = forms.AddPOCategory()
 
         # Get the categories from the API
-        form.category.choices = [("", "Choose Category")] + api.getPurchaseOrderCategories(0, asTuples=True)
+        form.category.choices = [("", "Choose Category")] + api.getPurchaseOrderCategories(0, WTForms=True)
 
         # Get the subcategories from the API
-        form.subcategory1.choices = [("", "Choose Subcategory")] + api.getPurchaseOrderCategories(1, asTuples=True)
+        form.subcategory1.choices = [("", "Choose Subcategory")] + api.getPurchaseOrderCategories(1, WTForms=True)
 
         # If the information has been validated, then go ahead to the
         # success page.
@@ -55,9 +55,9 @@ class FinanceViews(object):
 
             # If there's a new category, then refresh the choices.
             if category:
-                form.category.choices = [("", "Choose Category")] + api.getPurchaseOrderCategories(0, asTuples=True)
+                form.category.choices = [("", "Choose Category")] + api.getPurchaseOrderCategories(0, WTForms=True)
             if subcategory1:
-                form.subcategory1.choices = [("", "Choose Subcategory")] + api.getPurchaseOrderCategories(1, asTuples=True)
+                form.subcategory1.choices = [("", "Choose Subcategory")] + api.getPurchaseOrderCategories(1, WTForms=True)
 
 
             # Clear out the data.

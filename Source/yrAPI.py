@@ -23,7 +23,7 @@ class yrAPI(object):
         return response.json()
 
 
-    def getPurchaseOrderCategories(self, level, asTuples=False):
+    def getPurchaseOrderCategories(self, level, WTForms=False):
         """ Get the categories for purchase orders.
 
         level: an integer from 0 to 2 having to do with
@@ -41,7 +41,7 @@ class yrAPI(object):
             api_categories = api_query_result['Response']
             api_categories.sort()
 
-        if asTuples:
+        if WTForms:
             for category in api_categories:
                 categories.append((category, category))
         else:
@@ -72,3 +72,11 @@ class yrAPI(object):
             people = api_people
 
         return people
+
+    def getPerson(self, _id):
+        api_query_result = self.serverRequest('/person/%s' % _id)
+
+        if api_query_result and api_query_result['Status'] == 'OK':
+            api_person = api_query_result['Person']
+
+        return api_person

@@ -3,6 +3,7 @@ from flask_googleauth import GoogleFederated
 from jinja2 import Template
 
 import urllib2, urllib, json, sys
+import logging
 
 import forms
 
@@ -17,22 +18,42 @@ app = Flask(__name__, instance_relative_config=True)
 #app.config.from_object(__name__)
 app.config.from_pyfile('intranet_cfg.py', silent=False)
 
+# Set up logging
+logger = logging.getLogger('yr_central')
+logger.setLevel(eval(app.config['LOG_LEVEL']) if app.config['LOG_LEVEL'] else logging.DEBUG)
+
+# create file handler which logs even debug messages
+fh = logging.FileHandler(app.config['LOG_FILE'] if app.config['LOG_FILE'] else app.config['/tmp/yr_central.log'])
+fh.setLevel(logging.INFO)
+
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+
+# add the handlers to the logger
+logger.addHandler(fh)
+
 # Setup Google Federated Auth
 auth = GoogleFederated('youthradio.org', app)
 
 # Set up the API objects
 api = yrAPI(url=app.config['YR_API_SERVER_URL'])
 metrics = MetricsAPI(url=app.config['METRICS_SERVER_URL'], request=request)
+logger.info('[API] All APIs registered.')
 
 # Set up the URL views
 adpMetricsView = ADPMetricsViews(request=request, yr_api=api, metrics_api=metrics)
 financeView = FinanceViews(request=request, yr_api=api, metrics_api=metrics)
 userView = UserViews(request=request, yr_api=api, metrics_api=metrics)
+logger.info('[FLASK] All Flask view objects instantiated.')
 
 """
 Overall web page views
 """
 app.add_url_rule('/', 'central_index', auth.required(adpMetricsView.metricsIndexPage), methods=["GET"])
+
+logger.info('[FLASK] All overall web page URL rules added.')
+
 
 """
 AllDayPlay Metrics Views
@@ -54,19 +75,27 @@ app.add_url_rule('/metrics/adp/_getLastXminsOfSessions', 'ajax_lastXminsOfSessio
 app.add_url_rule('/metrics/adp/_getLastXhoursOfListeners', 'ajax_lastXhoursOfListeners', auth.required(adpMetricsView.ajaxLastXhoursOfListeners), methods=['GET'])
 app.add_url_rule('/metrics/adp/_getLastXdaysOfListeners', 'ajax_lastXdaysOfListeners', auth.required(adpMetricsView.ajaxLastXdaysOfListeners), methods=['GET'])
 
+logger.info('[FLASK] All ADP metrics URL rules added.')
+
 """
 Finance views
 """
 app.add_url_rule('/finance/category/add/', 'finance_category_add', auth.required(financeView.addPOCategory), methods=['GET', 'POST'])
 
+logger.info('[FLASK] All Finance URL rules added.')
+
 """
 User Views
 """
 app.add_url_rule('/person/add/', 'user_person_add', auth.required(userView.addPerson), methods=['GET', 'POST'])
+app.add_url_rule('/person/edit/<_id>', 'user_person_edit', auth.required(lambda _id: userView.editPerson(_id)), methods=['GET', 'POST'])
 app.add_url_rule('/staff/list/', 'user_staff_list', auth.required(userView.staffMembersList), methods=['GET'])
+
+logger.info('[FLASK] All User URL rules added.')
 
 if __name__ == "__main__":
     app.debug = app.config["DEBUG"]
+    logger.info('Youth Radio Central server started. HOST: %s:%i' % (app.config["HOST"], app.config["PORT"]) )
 
     if app.debug:
         app.run(host=app.config["HOST"], port=app.config["PORT"])

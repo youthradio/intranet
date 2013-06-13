@@ -1,4 +1,4 @@
-from flask.ext.wtf import Form, TextField, DateField, SelectField, BooleanField, SubmitField, validators
+from flask.ext.wtf import Form, TextField, DateField, SelectField, BooleanField, SubmitField, HiddenField, validators
 
 US_STATES = [
     ("", "State"), ("AK", "Alaska"), ("AL", "Alabama"), ("AS", "American Samoa"),
@@ -30,7 +30,20 @@ GENDER = [
     ("FTM", "Female-to-Male")
 ]
 
-class AddPOCategory(Form):
+class CentralForm(Form):
+    """docstring for CentralForm"""
+    def __init__(self):
+        super(CentralForm, self).__init__()
+
+    def populateFormFields(self, obj, prefix=''):
+        """ In order to automatically populate the fields with
+        values from the database, then use this function. """
+        for field_name, field_value in obj.iteritems():
+            if prefix + field_name in self:
+                self[prefix + field_name].data = field_value
+
+
+class AddPOCategory(CentralForm):
     """ This is a WTForms implementation for 
     adding a person to the Youth Radio database.
     """
@@ -60,12 +73,7 @@ class AddPOCategory(Form):
     # Submit field
     add_category = SubmitField('Add Category/Subcategory')
 
-
-class AddPerson(Form):
-    """ This is a WTForms implementation for
-    adding a person to the Youth Radio database.
-    """
-
+class Person(CentralForm):
     # Type of person being added to the database
     person_type = SelectField('person_type', choices=PERSON_TYPE, validators=[
         validators.Required(message=(u'You must choose a person type.'))
@@ -134,6 +142,8 @@ class AddPerson(Form):
         validators.Optional()
     ])
 
+
+class StaffMember(Person):
     # Staff-specific information
     extension = TextField('extension', validators=[
         validators.Optional()
@@ -148,5 +158,24 @@ class AddPerson(Form):
         validators.Optional()
     ])
 
+
+class AddStaffMember(StaffMember):
+    """ This is a WTForms implementation for
+    adding a person to the Youth Radio database.
+    """
+
     # Submit field
-    add_person = SubmitField('Add Person')
+    submit = SubmitField('Add Person')
+
+
+class EditStaffMember(StaffMember):
+    """ This is a WTForms implementation for
+    editing a staff member in the Youth Radio database.
+    """
+
+    # Hidden ID field
+    person_id = HiddenField()
+
+    # Submit field
+    submit = SubmitField('Edit Person')
+

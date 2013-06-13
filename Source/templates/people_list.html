@@ -18,7 +18,7 @@
                 </tr>
                 {% for person in people %}
                 <tr>
-                    <td>{{ person['first_name'] }} {{ person['last_name'] }}</td>
+                    <td>{{ person['first_name'] }} {{ person['last_name'] }} (<a href="{{ url_for('user_person_edit', _id=person['_id']) }}">edit</a>)</td>
                     <td>{% if person['extension'] != None %}{{ person['extension'] }}{% endif %}</td>
                     <td>{% if person['email'] != None %}{{ person['email'] }}{% endif %}</td>
                     <td>{% if person['phone']['cell'] != None %}{{ person['phone']['cell'] }}{% endif %}</td>
