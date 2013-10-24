@@ -1,5 +1,7 @@
 from flask import render_template, g, url_for, flash
 
+import logging
+
 import forms
 
 class FinanceViews(object):
@@ -9,6 +11,9 @@ class FinanceViews(object):
         self.request = request
         self.yr_api = yr_api
         self.metrics_api = metrics_api
+
+        self.logger = logging.getLogger('yr_central')
+        self.logger.info('[FINANCE_VIEW] Instantiated with API and Metrics.')
 
     def addPOCategory(self):
         """ The form for adding a new Finance Category to the database. """
@@ -48,10 +53,13 @@ class FinanceViews(object):
             }
 
             # Post to the API.
-            api.serverRequest("/finance/cat/add", POCategory)
+            api_response = api.serverRequest("/admin/cat/add", POCategory)
 
             # Flash a message saying this has been added.
-            flash(u"%s >> %s >> %s Added" % (category, subcategory1, subcategory2))
+            if api_response['Status'] == 'OK':
+                flash(u"%s >> %s >> %s Added" % (category, subcategory1, subcategory2))
+            else:
+                flash(u'There was an error: %s' % api_response['Status'])
 
             # If there's a new category, then refresh the choices.
             if category:
@@ -76,5 +84,50 @@ class FinanceViews(object):
         return render_template("finance_category_add.html",
                                user=g.user,
                                title="Add A Purchase Order Category", 
+                               form=form)
+
+    def addDepartment(self, _id=None):
+        """ This form is used to add departments to the organization. """
+        api = self.yr_api
+        logger = self.logger
+
+        # Get the form from WTForms
+        form = forms.EditDepartment() if _id else forms.AddDepartment()
+
+        if form.validate_on_submit():
+            dept = {'name': form.name.data}
+
+            # Post to the API.
+            
+            api_response = api.serverRequest("/admin/dept/add", request_method='POST', data=dept)
+
+            if api_response['Status'] == 'OK':
+                flash(u"%s Added" % (form.name.data))
+                form.name.data = None
+            else:
+                flash(u'There was an error: %s' % api_response['Status'])
+
+        # Flash the error messages if they exist.
+        if form.errors:
+            for field, error_list in form.errors.iteritems():
+                for error in error_list:
+                    flash(unicode(error))
+
+        # If there's an ID passed in, then this is an edit operation.
+        if _id:
+
+            logger.info('[FINANCE_VIEW] Editing a department for _id [%s]' % (_id))
+
+            api_dept = api.getDepartment(_id)
+
+            logger.info('[FINANCE_VIEW] Department for _id [%s] returned from API: %s' % (_id, str(api_dept)))
+
+            # Set the form data
+            form.name.data = api_dept['dept_name']
+            form.dept_id.data = _id
+
+        return render_template("finance_department_add.html",
+                               user=g.user,
+                               title="Add A Department", 
                                form=form)
 

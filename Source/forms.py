@@ -179,3 +179,28 @@ class EditStaffMember(StaffMember):
     # Submit field
     submit = SubmitField('Edit Person')
 
+
+class Department(CentralForm):
+    """ This is a WTForms implementatino for
+    adding a department to the Youth Radio database.
+    """
+
+    name = TextField('name', validators=[
+        validators.Required(message=(u'Department name is required.'))
+    ])
+
+class AddDepartment(Department):
+    """ This is a WTForms implementatino for
+    adding a department to the Youth Radio database.
+    """
+
+    submit = SubmitField('Add Department')
+
+class EditDepartment(Department):
+    """ This is a WTForms implementatino for
+    adding a department to the Youth Radio database.
+    """
+
+    dept_id = HiddenField()
+
+    submit = SubmitField('Edit Department')

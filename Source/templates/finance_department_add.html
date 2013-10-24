@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Youth Radio Central{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block left_status %}{{ title }}{% endblock %}
+{% block right_status %}Welcome, {{ user.name }}{% endblock %}
+{% block page_content %}
+        <h1>{{ title }}</h1>
+        <div id="form_container">
+            <form action="{{ request.path }}" method="post" name="add_department">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.name(size=15, placeholder="New Department") }} 
+                </p>
+                <p>{{ form.submit()}}</p>
+                {{ form.dept_id }}
+            </form>
+        </div>
+{% endblock %}
+{% block page_bottom %}
+{{ super() }}
+
+{% endblock %}

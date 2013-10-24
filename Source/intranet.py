@@ -81,6 +81,8 @@ logger.info('[FLASK] All ADP metrics URL rules added.')
 Finance views
 """
 app.add_url_rule('/finance/category/add/', 'finance_category_add', auth.required(financeView.addPOCategory), methods=['GET', 'POST'])
+app.add_url_rule('/finance/dept/add/', 'finance_department_add', auth.required(financeView.addDepartment), methods=['GET', 'POST'])
+app.add_url_rule('/finance/dept/edit/<_id>', 'finance_department_edit', auth.required(lambda _id: financeView.addDepartment(_id)), methods=['GET', 'POST'])
 
 logger.info('[FLASK] All Finance URL rules added.')
 

@@ -1,10 +1,15 @@
 import urllib2, urllib, json, requests
 
+import logging
+
 class yrAPI(object):
     """Youth Radio API wrapper methods."""
     def __init__(self, url):
-        self.server_url = url
         super(yrAPI, self).__init__()
+        self.server_url = url
+
+        self.logger = logging.getLogger('yr_central')
+        self.logger.info('[YR_API_WRAPPER] Instantiated with API URL: [%s]' % url)
 
 
     def serverRequest(self, api_method, request_method='GET', data=None):
@@ -14,6 +19,9 @@ class yrAPI(object):
         using the configuration variables given in the configuration
         file.
         """
+        log = self.logger
+        log.info('[YR_API_WRAPPER] Request [Type: %s] - [URL: %s] [Params: %r]' % (request_method, self.server_url + api_method, data))
+
         if request_method.upper() == 'GET':
             response = requests.get(self.server_url + api_method, params=data, allow_redirects=True)
         elif request_method.upper() == 'POST':
@@ -34,7 +42,7 @@ class yrAPI(object):
         tuples to be used with WTForms or just a plain list.
         """
         # Get the categories from the API
-        api_query_result = self.serverRequest('/finance/cat/list/%i' % level)
+        api_query_result = self.serverRequest('/admin/cat/list/%i' % level)
         api_categories = categories = []
 
         if api_query_result and api_query_result['Status'] == "OK":
@@ -74,9 +82,27 @@ class yrAPI(object):
         return people
 
     def getPerson(self, _id):
+        """ Get an individual person from the database.
+
+        _id: This is the ObjectID of the person.
+        """
+        api_peson = None
         api_query_result = self.serverRequest('/person/%s' % _id)
 
         if api_query_result and api_query_result['Status'] == 'OK':
             api_person = api_query_result['Person']
 
         return api_person
+
+    def getDepartment(self, _id):
+        """ Get an individual department from the database.
+
+        _id: This is the ObjectID of the department.
+        """
+        api_department = None
+        api_query_result = self.serverRequest('/admin/dept/%s' % _id)
+
+        if api_query_result and api_query_result['Status'] == 'OK':
+            api_department = api_query_result['Department']
+
+        return api_department
