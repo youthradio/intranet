@@ -4,6 +4,7 @@ from jinja2 import Template
 
 import urllib2, urllib, json, sys
 import logging
+import smtplib
 
 import forms
 
@@ -12,6 +13,7 @@ from metricsAPI import *
 from views_metrics_adp import ADPMetricsViews
 from views_finance import FinanceViews
 from views_user import UserViews
+from views_newsroom import NewsroomViews
 
 # Setup Flask
 app = Flask(__name__, instance_relative_config=True)
@@ -45,6 +47,7 @@ logger.info('[API] All APIs registered.')
 adpMetricsView = ADPMetricsViews(request=request, yr_api=api, metrics_api=metrics)
 financeView = FinanceViews(request=request, yr_api=api, metrics_api=metrics)
 userView = UserViews(request=request, yr_api=api, metrics_api=metrics)
+newsroomView = NewsroomViews(request=request, yr_api=api, metrics_api=metrics)
 logger.info('[FLASK] All Flask view objects instantiated.')
 
 """
@@ -92,6 +95,13 @@ User Views
 app.add_url_rule('/person/add/', 'user_person_add', auth.required(userView.addPerson), methods=['GET', 'POST'])
 app.add_url_rule('/person/edit/<_id>', 'user_person_edit', auth.required(lambda _id: userView.editPerson(_id)), methods=['GET', 'POST'])
 app.add_url_rule('/staff/list/', 'user_staff_list', auth.required(userView.staffMembersList), methods=['GET'])
+
+"""
+Newsroom Views
+"""
+app.add_url_rule('/newsroom/dl', 'newsroom_dailylist_home', auth.required(newsroomView.dailyListForm), methods=['GET'])
+app.add_url_rule('/newsroom/dl/submit', 'newsroom_dailylist_submit', auth.required(newsroomView.dailyListSubmission), methods=['POST'])
+app.add_url_rule('/_getPageTitleForDailyList', 'ajax_getPageTitleForDailyList', auth.required(newsroomView.ajaxDailyListGetTitle), methods=['GET'])
 
 logger.info('[FLASK] All User URL rules added.')
 

@@ -1,0 +1,122 @@
+<!doctype html>
+<head>
+  <title> Newsroom Daily List </title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+</head> 
+<body style="background-color:#E8E8E8;padding:3px">
+
+
+<table  style="background-color:#FFFFFF; border:1px solid #E8E8E8;border-collapse:collapse;" width="528"  >
+<thead>
+  <tr>
+  <td width="403"> <h2 style= color:#3ebec0; >Newsroom Daily List</h2>
+  <strong> {{ current_date }} </strong> </td>
+    <td rowspan="2"> <img src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png" align="right"> </td>
+    
+  <tr>   
+  </tr>
+</thead>
+
+
+<tbody style="background-color:#FFFFFF; border:1px solid #E8E8E8;border-collapse:collapse;" width="528"  >
+  <form action="/submit" method="post">
+<tr>
+  <td valign="top" width = "100%" style="border:4px solid #E8E8E8;padding:6px;">
+  <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32209PM_zps657e43ed.png" border="0" alt=" photo ScreenShot2013-08-16at32209PM_zps657e43ed.png" height=30px/>
+  <BR><strong style= color:#3ebec0> YouthRadio.org </strong> 
+  <BR> {{ request.form['yr'] }} 
+  <BR>
+  <br> <strong> Player </strong> 
+  <BR> {{ request.form['player'] }} 
+  <BR>
+  <br> <strong> Podcast</strong> 
+  <br> {{ request.form['YRP'] }} 
+  <BR>
+  <br> <strong style= color:#3ebec0> Turnstyle News </strong>
+  <br> {{ request.form['tn'] }}
+  <BR>
+  <br> <strong style= color:#3ebec0> All Day Play </strong> 
+  <br> {{ request.form['adp'] }} 
+  <BR>
+  <br> <strong style= color:#3ebec0 > Huffington Post </strong> 
+  <br> {{ request.form['HP'] }} 
+  <BR>
+  <br> <strong style= color:#3ebec0 > Social Media </strong> 
+  <br> {{ request.form['SM'] }} 
+   </td>
+   
+   <td valign="top" width = "35%" style="border:4px solid #E8E8E8;padding:3px;"> 
+       <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
+    <br> {{ request.form['news']|safe }} 
+    <br>
+ <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
+    <br> {{ request.form['ann'] }} 
+ 
+  </td> 
+</tr>
+
+<table bordercolor="#E8E8E8" style="background-color:#FFFFFF;padding:3px" width="528"> 
+  <tr width="528">
+  <td colspan=2>
+  <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
+  <br> <strong style= color:#3ebec0 > Newsroom </strong> 
+  <br> {{ request.form['nr'] }} 
+ </td>
+ <tr> </tr>
+ </tr>
+ <tr>
+  <td>
+   <br> <strong style= color:#3ebec0 > Brett </strong>
+  <br> {{ request.form['bm'] }} 
+  <td> 
+  <br> <strong style= color:#3ebec0 > Denise </strong>
+  <br> {{ request.form['dt'] }} 
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 > Robyn </strong> 
+  <br> {{ request.form['rg'] }} 
+  
+  <td>
+   <br> <strong style= color:#3ebec0 > Ike </strong> 
+  <br> {{ request.form['is'] }} </td>
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 > Nishat </strong> 
+  <br> {{ request.form['nk'] }} </td>
+  <td>
+   <br> <strong style= color:#3ebec0 > Noah </strong> 
+  <br> {{ request.form['nn'] }} </td>
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 > Teresa </strong>  
+  <br> {{ request.form['tc'] }} </td>
+  <td>
+  <br> <strong style= color:#3ebec0 >Chaz </strong>
+  <br> {{ request.form['ch'] }} </td>
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 >Brandon </strong>
+  <br> {{ request.form['bm'] }} </td>
+  <td>
+  <br> <strong style= color:#3ebec0 >Other </strong>
+  <br> {{ request.form['other'] }} </td>
+ </tr>
+</tbody> 
+
+</table>
+</form>
+
+
+</body>
+
+
+</html>
+
+
+
+

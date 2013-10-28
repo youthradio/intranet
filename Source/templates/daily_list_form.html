@@ -1,0 +1,179 @@
+<!doctype html>
+<head>
+  <title> Newsroom Daily List </title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+  
+  <style type="text/css">
+    .dImg {
+      height: 16px;
+      width: 16px;
+    }
+  </style>
+
+</head> 
+<body style="background-color:#E8E8E8;padding:3px">
+
+
+<table  bordercolor="#E8E8E8" style="background-color:#FFFFFF;padding:3px" width="1025"  >
+<form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
+  <tr>
+    <td rowspan="2"> <img src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png">  </td>
+    <td width="403" style= color:#3ebec0;> <h2>Rebecca's Daily List</h2></td>
+  <tr>
+    <td width="403">Today's Date  
+    <tr> <td> <input type="submit" value="Send to News Room"/> </td></tr> </td>
+  </tr>
+
+</table>
+
+<table  style="background-color:#FFFFFF; border:1px solid #E8E8E8;border-collapse:collapse;" width="528"  >
+  
+<tr>
+  <td valign="top" width = "35%" style="border:4px solid #E8E8E8;padding:3px;"> 
+       <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
+    <br> <input type="text" id="newslink" style="width:436;border:solid 1px #aacfe4; " /> <input type="button" value="add" id="newsclick"/>
+    <br>
+    <ul id="story_list">
+    </ul>
+
+        <br>
+ <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
+    <br> <textarea rows="3"  name="ann"></textarea> 
+ 
+  </td> 
+
+  <td valign="top" width = "65%" style="border:4px solid #E8E8E8;padding:6px;">
+    <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32209PM_zps657e43ed.png" border="0" alt=" photo ScreenShot2013-08-16at32209PM_zps657e43ed.png" height=30px/> <br><strong style= color:#3ebec0> YouthRadio.org </strong> 
+  <BR> <textarea rows="3" cols="32" name="yr"></textarea>
+  <br> <strong> Player </strong> 
+  <BR> <textarea rows="3" cols="32" name="player"></textarea>
+  <br> <strong> Podcast</strong> 
+  <br> <textarea rows="3" cols="32" name="YRP"></textarea>
+  <br> <strong style= color:#3ebec0> Turnstyle News </strong>
+  <br> <textarea rows="3" cols="32" name="tn"></textarea> 
+  <br> <strong style= color:#3ebec0> All Day Play </strong> 
+  <br> <textarea rows="2"  cols="32" name="adp"> </textarea> 
+  <br> <strong style= color:#3ebec0 > Huffington Post </strong> 
+  <br> <textarea rows="3" cols="32" name="HP"></textarea>
+  <br> <strong style= color:#3ebec0 > Social Media </strong> 
+  <br> <textarea rows="3" cols="32" name="SM"></textarea>
+   </td>
+   <td valign="top" width = "65%" style="border:4px solid #E8E8E8;padding:6px;">
+   <table > 
+  <tr width="528">
+  <td colspan=2>
+  <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
+  <br> <strong style= color:#3ebec0 > Newsroom </strong> 
+  <br> <textarea rows="3" cols="60" name="Nr"></textarea>
+ </td>
+ <tr> </tr>
+ </tr>
+ <tr>
+  <td>
+   <br> <strong style= color:#3ebec0 > Brett </strong>
+  <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
+  <td> 
+  <br> <strong style= color:#3ebec0 > Denise </strong>
+  <br> <textarea rows="3" cols="32" name="dt"></textarea></td>
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 > Robyn </strong> 
+  <br> <textarea rows="3" cols="32" name="rg"></textarea></td>
+  
+  <td>
+   <br> <strong style= color:#3ebec0 > Ike </strong> 
+  <br> <textarea rows="3" cols="32" name="is"></textarea></td>
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 > Nishat </strong> 
+  <br> <textarea rows="3" cols="32" name="nk"></textarea></td>
+  <td>
+   <br> <strong style= color:#3ebec0 > Noah </strong> 
+  <br> <textarea rows="3" cols="32" name="nn"></textarea></td>
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 > Teresa </strong>  
+  <br> <textarea rows="3" cols="32" name="tc"></textarea></td>
+  <td>
+  <br> <strong style= color:#3ebec0 >Chaz </strong>
+  <br> <textarea rows="3" cols="32" name="ch"></textarea></td>
+ </tr>
+ <tr>
+  <td>
+  <br> <strong style= color:#3ebec0 >Brandon </strong>
+  <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
+  <td>
+  <br> <strong style= color:#3ebec0>Other </strong>
+  <br> <textarea rows="3" cols="32" name="other"></textarea> </td>
+ </tr>
+</table> 
+
+   </td>
+</tr>
+
+
+</table>
+
+<input type="hidden" name="news" id="compiled_news_links" />
+
+</form>
+
+<script type="text/javascript">
+var newslink = $('#newslink')
+var newsclick = $('#newsclick')
+
+  // Event handler for submitting the form...
+  // Need to compile everything from the news links in to a form field.
+  $('#dailyList').on('submit', function(event) {
+    
+    if ( $( event.target ).is() ) {};
+    var linkText = "<ul>\n";
+
+    $('#story_list li').each(function(index) {
+      linkText = linkText + "<li>" + $(this).html() + "</li>\n"
+    });
+
+    linkText = linkText + "</ul>\n";
+
+    $('#compiled_news_links').val(linkText);
+  });
+
+  // Event handler for adding a link...
+  $('#newsclick').on("click", function (event) {
+    $.get(
+      '{{ url_for("ajax_getPageTitleForDailyList") }}',
+      { url: newslink.val() }
+    ).done(function(page) {
+      // Convert this to JSON
+      pageInfo = jQuery.parseJSON(page)
+
+      // Add to the LI
+      link = '<a href ="' + pageInfo.url + '" target="_blank">' + pageInfo.title + '</a>';
+      deleteImage = '<img class="dImg" src="/static/img/delete.png">';
+      $('#story_list').append('<li>' + link + deleteImage + '</li>');
+      $('#story_list li img').removeClass('dImg').addClass('dImg');
+
+      // Event handler for deleting a link...
+      $('.dImg').on('click', function (event) {
+        $(this).parent().remove();
+      })
+
+      // Clear the input box
+      newslink.val('');
+    });
+  });
+
+</script>
+
+</body>
+
+
+</html>
+
+
+
+
