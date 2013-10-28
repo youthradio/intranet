@@ -1,4 +1,6 @@
-from flask.ext.wtf import Form, TextField, DateField, SelectField, BooleanField, SubmitField, HiddenField, validators
+from flask.ext.wtf import Form
+
+from wtforms import TextField, DateField, SelectField, BooleanField, SubmitField, HiddenField, validators
 
 US_STATES = [
     ("", "State"), ("AK", "Alaska"), ("AL", "Alabama"), ("AS", "American Samoa"),
