@@ -23,7 +23,8 @@ class NewsroomViews(object):
         return render_template('daily_list_form.html')
 
     def dailyListSubmission(self):
-        now = datetime.now()
+        now = datetime.datetime.now()
+        request = self.request
 
         current_year = now.year
         current_month = now.month
