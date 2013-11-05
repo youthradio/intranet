@@ -1,4 +1,10 @@
-intranet
+Youth Radio Central
 ========
 
-The Youth Radio Intranet
+
+Required Packages to Build:
+========
+Flask
+flask-googleauth
+Flask-WTF
+beautifulsoup4
