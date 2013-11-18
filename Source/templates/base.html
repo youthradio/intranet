@@ -28,14 +28,37 @@
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
+
+      
+
         <div id="yr_header">
             <div id="yr_status_bar">
                 <table>
                     <tr><td align="left">{% block left_status %}{% endblock %}</td><td align="right">{% block right_status %}{% endblock %}</td></tr>
                 </table>
             </div>
-            <img src="/static/img/YR_final_large.jpg" style="margin: 0px; width: 1000px;" />
+
         </div>
+
+        <div id="yr_nav">
+         <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/footer-logo_zps73f232fc.png" align="left" class="start" id="logo"> 
+    
+        <p> Youth Radio Central </p>
+
+        <table>
+            <tr>
+                <td> Newsroom </td>
+                <td> All Day Play </td>
+                <td> All Day Play </td>
+                <td> Check In </td>
+                <td> Finance </td>
+                <td> Media Ed </td>
+            <td> Health </td>
+        </tr>
+        </table>
+        </div> 
+        <div class="some">
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div id="error_messages">
@@ -52,5 +75,7 @@
 
         {% block page_bottom %}
         {% endblock %}
+
+        </div>
     </body>
 </html>

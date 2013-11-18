@@ -35,7 +35,7 @@ body {
 }
 
 ::selection {
-    background: #b3d4fc;
+    background: #E8E8E8;
     text-shadow: none;
 }
 
@@ -104,7 +104,8 @@ textarea {
 }
 
 .list h1 {
-    background: #9ABD4B;
+    background-color: #3ebec0;
+    color:white;
     font-size: 1.1em;
     font-weight: 800;
     padding-right: 10px;
@@ -127,6 +128,11 @@ textarea {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+.some{
+  position:absolute;
+  top:130px;
 }
 
 /* ==============================
@@ -158,16 +164,55 @@ textarea {
 
 h1 {
     display: block;
-    background: #9ABD4B;
+    background: #3ebec0;
     font-size: 1.1em;
     font-weight: 800;
     padding-right: 10px;
+    color:#3ebec0;
 }
 
 #error_messages {
     width: 100%;
     border-top: 1px solid #9ABD4B;
 }
+/* ==============================
+   Youth Radio Navigation Bar 
+   ============================== */
+#yr_nav img {
+  position:absolute;
+  left: 40px;
+  top:20px;
+}
+
+#yr_nav p{
+  color:#3ebec0;
+  font-size: 40px;
+  position:absolute;
+  top:-15px;
+  left:160px;
+
+}
+
+#yr_nav table{
+  width:940px;
+  background: white;
+  border-color: white;
+  padding: 5px;
+  position:absolute;
+  top:76px;
+  left:160px;
+  text-align: center
+
+}
+
+#yr_nav td{
+  color:white;
+  background-color: #3ebec0;
+  padding: 5px;
+  border-color: white;
+  border: 3px;
+}
+
 
 /* ==============================
    Youth Radio Containers
@@ -245,7 +290,7 @@ h1 {
 }
 
 #stats_container span {
-    background: #9ABD4B;
+    background: #3ebec0;
     color: white;
     font-style: italic;
     font-weight: bold;
