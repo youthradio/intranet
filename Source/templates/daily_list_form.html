@@ -5,142 +5,195 @@
   <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
   
   <style type="text/css">
+    
+    body{
+      background-color:#E8E8E8;
+      padding: 3px; 
+    }
+
+    p,h1{
+      color:#3ebec0;
+      font-family: arial;
+      line-height:1%;
+    }
+
+    textarea{
+      position: relative;
+      top: -20px;
+    }
+
     .dImg {
       height: 16px;
       width: 16px;
     }
+
+    #SubTable {
+      background: #FFFFFF;
+      border-color: #E8E8E8;
+      padding: 3px;
+      width: 1025px;
+    }
+
+    #InpTable {
+      background-color: #FFFFFF;
+      border:1px, solid; 
+      border-collapse:collapse;
+      width: 528px;
+
+    }
+
+     #InpTable td{
+      border:4px solid #E8E8E8;
+      padding:3px;
+
+    }
+
+     #InpTable td td{
+      border:4px solid white;
+  
+    }
+
+    #asnTable textarea{
+      position: relative;
+      top: -20px;
+    }
+
+    .tealTXT{
+      color:#3ebec0 ;
+    }
+
+
+
   </style>
 
-</head> 
-<body style="background-color:#E8E8E8;padding:3px">
+  </head> 
+  <body>
+    <table id="SubTable" >
+      <form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
+        <tr>
+          <td rowspan="2"> <img src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png">  </td>
+          <td width="403"> <h1 class="tealTXT" > Rebecca's Daily List </h1></td>
+        </tr>
+        <tr>
+          <td width="403"> <input type="submit" value="Send to News Room"/></td>
+        </tr>
 
+    </table>
 
-<table  bordercolor="#E8E8E8" style="background-color:#FFFFFF;padding:3px" width="1025"  >
-<form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
-  <tr>
-    <td rowspan="2"> <img src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png">  </td>
-    <td width="403" style= color:#3ebec0;> <h2>Rebecca's Daily List</h2></td>
-  </tr>
-  <tr>
-    <td width="403"><input type="submit" value="Send to News Room"/></td>
-  </tr>
+    <table id="InpTable" >
+    
+      <tr>
+        <td valign="top" width = "35%"> 
+         <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
+          <br> <input type="text" id="newslink" style="width:436;border:solid 1px #aacfe4; " /> <input type="button" value="add" id="newsclick"/>
+          <br>
+          <ul id="story_list">
+          </ul>
 
-</table>
+          <br>
+            <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
+          <br> <textarea rows="3"  name="ann"></textarea> 
+   
+        </td> 
 
-<table  style="background-color:#FFFFFF; border:1px solid #E8E8E8;border-collapse:collapse;" width="528"  >
-  
-<tr>
-  <td valign="top" width = "35%" style="border:4px solid #E8E8E8;padding:3px;"> 
-       <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
-    <br> <input type="text" id="newslink" style="width:436;border:solid 1px #aacfe4; " /> <input type="button" value="add" id="newsclick"/>
-    <br>
-    <ul id="story_list">
-    </ul>
-
-        <br>
- <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
-    <br> <textarea rows="3"  name="ann"></textarea> 
- 
-  </td> 
-
-  <td valign="top" width = "65%" style="border:4px solid #E8E8E8;padding:6px;">
-    <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32209PM_zps657e43ed.png" border="0" alt=" photo ScreenShot2013-08-16at32209PM_zps657e43ed.png" height=30px/> <br><strong style= color:#3ebec0> YouthRadio.org </strong> 
-  <BR> <textarea rows="3" cols="32" name="yr"></textarea>
-  <br> <strong> Player </strong> 
-  <BR> <textarea rows="3" cols="32" name="player"></textarea>
-  <br> <strong> Podcast</strong> 
-  <br> <textarea rows="3" cols="32" name="YRP"></textarea>
-  <br> <strong style="color:#3ebec0"> Turnstyle News </strong>
-  <br> <textarea rows="3" cols="32" name="tn"></textarea> 
-  <br> <strong style="color:#3ebec0"> All Day Play </strong> 
-  <br> <textarea rows="2"  cols="32" name="adp"> </textarea> 
-  <br> <strong style="color:#3ebec0"> Huffington Post </strong> 
-  <br> <textarea rows="3" cols="32" name="HP"></textarea>
-  <br> <strong style="color:#3ebec0"> Social Media </strong> 
-  <br> <textarea rows="3" cols="32" name="SM"></textarea>
+        <td valign="top" width = "65%" >
+          <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32209PM_zps657e43ed.png" border="0" alt=" photo ScreenShot2013-08-16at32209PM_zps657e43ed.png" height=30px/> <br><p> YouthRadio.org </p> 
+            <textarea rows="3" cols="32" name="yr"></textarea>
+            <p> Player </p> 
+            <textarea rows="3" cols="32" name="player"></textarea>
+            <p> Podcast</p> 
+            <textarea rows="3" cols="32" name="YRP"></textarea>
+            <p> Turnstyle News </p>
+            <textarea rows="3" cols="32" name="tn"></textarea> 
+            <p> All Day Play </p> 
+            <textarea rows="2"  cols="32" name="adp"> </textarea> 
+            <p> Huffington Post </p> 
+            <textarea rows="3" cols="32" name="HP"></textarea>
+            <p> Social Media </p> 
+             <textarea rows="3" cols="32" name="SM"></textarea>
+         </td>
+     <td valign="top" width = "65%" >
+     
+    <tr width="528">
+    <td colspan=2>
+    <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
+    <br> <p>Newsroom</p> 
+    <br> <textarea rows="3" cols="60" name="Nr"></textarea>
    </td>
-   <td valign="top" width = "65%" style="border:4px solid #E8E8E8;padding:6px;">
-   <table > 
-  <tr width="528">
-  <td colspan=2>
-  <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
-  <br> <strong style="color:#3ebec0">Newsroom</strong> 
-  <br> <textarea rows="3" cols="60" name="Nr"></textarea>
- </td>
- <tr> </tr>
- </tr>
- <tr>
-  <td>
-   <br> <strong style="color:#3ebec0">Brett</strong>
-  <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
-  <td> 
-  <br> <strong style="color:#3ebec0">Denise</strong>
-  <br> <textarea rows="3" cols="32" name="dt"></textarea></td>
- </tr>
- <tr>
-  <td>
-  <br> <strong style="color:#3ebec0"> Robyn </strong> 
-  <br> <textarea rows="3" cols="32" name="rg"></textarea></td>
-  
-  <td>
-   <br> <strong style="color:#3ebec0">Ike</strong> 
-  <br> <textarea rows="3" cols="32" name="is"></textarea></td>
- </tr>
- <tr>
-  <td>
-  <br> <strong style="color:#3ebec0">Nishat</strong> 
-  <br> <textarea rows="3" cols="32" name="nk"></textarea></td>
-  <td>
-   <br> <strong style="color:#3ebec0">Noah</strong> 
-  <br> <textarea rows="3" cols="32" name="nn"></textarea></td>
- </tr>
- <tr>
-  <td>
-  <br> <strong style="color:#3ebec0">Teresa</strong>  
-  <br> <textarea rows="3" cols="32" name="tc"></textarea></td>
-  <td>
-  <br> <strong style="color:#3ebec0">Chaz</strong>
-  <br> <textarea rows="3" cols="32" name="ch"></textarea></td>
- </tr>
- <tr>
-  <td>
-  <br> <strong style="color:#3ebec0">Ellin</strong>
-  <br> <textarea rows="3" cols="32" name="eol"></textarea></td>
-  <td>
-  <br> <strong style="color:#3ebec0">Rebecca</strong>
-  <br> <textarea rows="3" cols="32" name="rm"></textarea></td>
- </tr>
- <tr>
-  <td>
-  <br> <strong style="color:#3ebec0">Lissa</strong>
-  <br> <textarea rows="3" cols="32" name="ls"></textarea></td>
-  <td>
-  <br> <strong style="color:#3ebec0">Asha</strong>
-  <br> <textarea rows="3" cols="32" name="ar"></textarea></td>
- </tr> 
- <tr>
-  <td>
-  <br> <strong style="color:#3ebec0">Kurt</strong>
-  <br> <textarea rows="3" cols="32" name="kc"></textarea></td>
-  <td>
-  <br> <strong style="color:#3ebec0">Brandon</strong>
-  <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
- </tr> 
- <tr>
-  <td>
-  <br> <strong style="color:#3ebec0">Interns</strong>
-  <br> <textarea rows="3" cols="32" name="interns"></textarea></td>
-  <td>
-  <br> <strong style="color:#3ebec0">Other</strong>
-  <br> <textarea rows="3" cols="32" name="other"></textarea> </td>
- </tr>
-</table> 
+   <tr> </tr>
+   </tr>
+   <tr>
+    <td>
+     <br> <p>Brett</p>
+    <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
+    <td> 
+    <br> <p>Denise</p>
+    <br> <textarea rows="3" cols="32" name="dt"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p> Robyn </p> 
+    <br> <textarea rows="3" cols="32" name="rg"></textarea></td>
+    
+    <td>
+     <br> <p>Ike</p> 
+    <br> <textarea rows="3" cols="32" name="is"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Nishat</p> 
+    <br> <textarea rows="3" cols="32" name="nk"></textarea></td>
+    <td>
+     <br> <p>Noah</p> 
+    <br> <textarea rows="3" cols="32" name="nn"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Teresa</p>  
+    <br> <textarea rows="3" cols="32" name="tc"></textarea></td>
+    <td>
+    <br> <p>Chaz</p>
+    <br> <textarea rows="3" cols="32" name="ch"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Ellin</p>
+    <br> <textarea rows="3" cols="32" name="eol"></textarea></td>
+    <td>
+    <br> <p>Rebecca</p>
+    <br> <textarea rows="3" cols="32" name="rm"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Lissa</p>
+    <br> <textarea rows="3" cols="32" name="ls"></textarea></td>
+    <td>
+    <br> <p>Asha</p>
+    <br> <textarea rows="3" cols="32" name="ar"></textarea></td>
+   </tr> 
+   <tr>
+    <td>
+    <br> <p>Kurt</p>
+    <br> <textarea rows="3" cols="32" name="kc"></textarea></td>
+    <td>
+    <br> <p>Brandon</p>
+    <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
+   </tr> 
+   <tr>
+    <td>
+    <br> <p>Interns</p>
+    <br> <textarea rows="3" cols="32" name="interns"></textarea></td>
+    <td>
+    <br> <p>Other</p>
+    <br> <textarea rows="3" cols="32" name="other"></textarea> </td>
+   </tr>
+  </table> 
 
-   </td>
-</tr>
+     </td>
+  </tr>
 
 
-</table>
+  </table>
 
 <input type="hidden" name="news" id="compiled_news_links" />
 
