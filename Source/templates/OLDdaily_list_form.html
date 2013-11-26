@@ -1,0 +1,256 @@
+<!doctype html>
+<head>
+  <title> Newsroom Daily List </title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+  
+  <style type="text/css">
+    
+    body{
+      background-color:#E8E8E8;
+      padding: 3px; 
+    }
+
+    p,h1{
+      color:#3ebec0;
+      font-family: arial;
+      line-height:1%;
+    }
+
+    textarea{
+      position: relative;
+      top: -20px;
+    }
+
+    .dImg {
+      height: 16px;
+      width: 16px;
+    }
+
+    #SubTable {
+      background: #FFFFFF;
+      border-color: #E8E8E8;
+      padding: 3px;
+      width: 1025px;
+    }
+
+    #InpTable {
+      background-color: #FFFFFF;
+      border:1px, solid; 
+      border-collapse:collapse;
+      width: 528px;
+
+    }
+
+     #InpTable td{
+      border:4px solid #E8E8E8;
+      padding:3px;
+
+    }
+
+     #InpTable td td{
+      border:4px solid white;
+  
+    }
+
+    #asnTable textarea{
+      position: relative;
+      top: -20px;
+    }
+
+    .tealTXT{
+      color:#3ebec0 ;
+    }
+
+
+
+  </style>
+
+  </head> 
+  <body>
+    <table id="SubTable" >
+      <form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
+        <tr>
+          <td rowspan="2"> <img src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png">  </td>
+          <td width="403"> <h1 class="tealTXT" > Rebecca's Daily List </h1></td>
+        </tr>
+        <tr>
+          <td width="403"> <input type="submit" value="Send to News Room"/></td>
+        </tr>
+
+    </table>
+
+    <table id="InpTable" >
+    
+      <tr>
+        <td valign="top" width = "35%"> 
+         <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
+          <br> <input type="text" id="newslink" style="width:436;border:solid 1px #aacfe4; " /> <input type="button" value="add" id="newsclick"/>
+          <br>
+          <ul id="story_list">
+          </ul>
+
+          <br>
+            <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
+          <br> <textarea rows="3"  name="ann"></textarea> 
+   
+        </td> 
+
+        <td valign="top" width = "65%" >
+          <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32209PM_zps657e43ed.png" border="0" alt=" photo ScreenShot2013-08-16at32209PM_zps657e43ed.png" height=30px/> <br><p> YouthRadio.org </p> 
+            <textarea rows="3" cols="10" name="yr"></textarea>
+            <p> Player </p> 
+            <textarea rows="3" cols="10" name="player"></textarea>
+            <p> Podcast</p> 
+            <textarea rows="3" cols="10" name="YRP"></textarea>
+            <p> Turnstyle News </p>
+            <textarea rows="3" cols="32" name="tn"></textarea> 
+            <p> All Day Play </p> 
+            <textarea rows="2"  cols="32" name="adp"> </textarea> 
+            <p> Huffington Post </p> 
+            <textarea rows="3" cols="32" name="HP"></textarea>
+            <p> Social Media </p> 
+             <textarea rows="3" cols="32" name="SM"></textarea>
+         </td>
+     <td valign="top" width = "65%" >
+     
+    <tr width="528">
+    <td colspan=2>
+    <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
+    <br> <p>Newsroom</p> 
+    <br> <textarea rows="3" cols="60" name="Nr"></textarea>
+   </td>
+   <tr> </tr>
+   </tr>
+   <tr>
+    <td>
+     <br> <p>Brett</p>
+    <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
+    <td> 
+    <br> <p>Denise</p>
+    <br> <textarea rows="3" cols="32" name="dt"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p> Robyn </p> 
+    <br> <textarea rows="3" cols="32" name="rg"></textarea></td>
+    
+    <td>
+     <br> <p>Ike</p> 
+    <br> <textarea rows="3" cols="32" name="is"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Nishat</p> 
+    <br> <textarea rows="3" cols="32" name="nk"></textarea></td>
+    <td>
+     <br> <p>Noah</p> 
+    <br> <textarea rows="3" cols="32" name="nn"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Teresa</p>  
+    <br> <textarea rows="3" cols="32" name="tc"></textarea></td>
+    <td>
+    <br> <p>Chaz</p>
+    <br> <textarea rows="3" cols="32" name="ch"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Ellin</p>
+    <br> <textarea rows="3" cols="32" name="eol"></textarea></td>
+    <td>
+    <br> <p>Rebecca</p>
+    <br> <textarea rows="3" cols="32" name="rm"></textarea></td>
+   </tr>
+   <tr>
+    <td>
+    <br> <p>Lissa</p>
+    <br> <textarea rows="3" cols="32" name="ls"></textarea></td>
+    <td>
+    <br> <p>Asha</p>
+    <br> <textarea rows="3" cols="32" name="ar"></textarea></td>
+   </tr> 
+   <tr>
+    <td>
+    <br> <p>Kurt</p>
+    <br> <textarea rows="3" cols="32" name="kc"></textarea></td>
+    <td>
+    <br> <p>Brandon</p>
+    <br> <textarea rows="3" cols="32" name="bm"></textarea></td>
+   </tr> 
+   <tr>
+    <td>
+    <br> <p>Interns</p>
+    <br> <textarea rows="3" cols="32" name="interns"></textarea></td>
+    <td>
+    <br> <p>Other</p>
+    <br> <textarea rows="3" cols="32" name="other"></textarea> </td>
+   </tr>
+  </table> 
+
+     </td>
+  </tr>
+
+
+  </table>
+
+<input type="hidden" name="news" id="compiled_news_links" />
+
+</form>
+
+<script type="text/javascript">
+var newslink = $('#newslink')
+var newsclick = $('#newsclick')
+
+  // Event handler for submitting the form...
+  // Need to compile everything from the news links in to a form field.
+  $('#dailyList').on('submit', function(event) {
+    
+    if ( $( event.target ).is() ) {};
+    var linkText = "<ul>\n";
+
+    $('#story_list li').each(function(index) {
+      linkText = linkText + "<li>" + $(this).html() + "</li>\n"
+    });
+
+    linkText = linkText + "</ul>\n";
+
+    $('#compiled_news_links').val(linkText);
+  });
+
+  // Event handler for adding a link...
+  $('#newsclick').on("click", function (event) {
+    $.get(
+      '{{ url_for("ajax_getPageTitleForDailyList") }}',
+      { url: newslink.val() }
+    ).done(function(page) {
+      // Convert this to JSON
+      pageInfo = jQuery.parseJSON(page)
+
+      // Add to the LI
+      link = '<a href ="' + pageInfo.url + '" target="_blank">' + pageInfo.title + '</a>';
+      deleteImage = '<img class="dImg" src="/static/img/delete.png">';
+      $('#story_list').append('<li>' + link + deleteImage + '</li>');
+      $('#story_list li img').removeClass('dImg').addClass('dImg');
+
+      // Event handler for deleting a link...
+      $('.dImg').on('click', function (event) {
+        $(this).parent().remove();
+      })
+
+      // Clear the input box
+      newslink.val('');
+    });
+  });
+
+</script>
+
+</body>
+
+
+</html>
+
+
+
+
