@@ -416,7 +416,7 @@ select {
    #DLheader h1{
     position: absolute;
     top: 1%;
-    left: 8.25%;
+    left: 3.25%;
     background-color: white;
     font-size: 26px;
    }
@@ -429,8 +429,8 @@ select {
 
   #DLheader input{
     position: absolute;
-    top:15%;
-    left: 8% ;
+    top:20%;
+    left: 28% ;
     
    }
 
@@ -442,8 +442,8 @@ select {
     padding: 3px;
     width: 250px;
     position: absolute;
-    left: 10px ;
-    top: 150px;
+    left: 30px;
+    top: 60px;
 
    }
 
@@ -466,8 +466,8 @@ select {
     padding: 3px;
     width: 250px;
     position: absolute;
-    left: 280px;
-    top: 150px;
+    left: 290px;
+    top: 60px;
 
    }
 
@@ -480,15 +480,26 @@ select {
     background-color: white;
     border-color: #E8E8E8;
     padding: 3px;
-    width: 34.5%;
+    width: 53%;
     position: absolute;
     left: 550px;
-    top: 150px;
+    top: 60px;
 
    }
 
   #DLassn textarea{
-    width: 94%;
+    width: 98%;
+  }
+
+  .left{
+    width: 45%;
+  }
+
+  .right{
+    position: absolute;
+    top: 190px;
+    left: 270px;
+    width: 50%;
   }
 
   .dImg {
