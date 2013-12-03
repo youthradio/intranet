@@ -1,15 +1,8 @@
-
-<!DOCTYPE html>
-
-<html>
-<head>
-<title> Youth Radio Inside </title>
+{% extends "base.html" %}
+{% block title %}{{ title }} - Youth Radio Central{% endblock %}
+{% block head %}
+{{ super() }}
 <style>
-
-body{
-	background-color: #E8E8E8;
-
-}
 
 p, h1, h2, td{
 	font-family:"Arial",Helvetica,sans-serif;
@@ -21,43 +14,10 @@ p, h1, h2, td{
 	
 }
 
-#logo{
-	position:absolute;
-	top:20px;
-}
-
-h1{
-	color:#3ebec0;
-	font-size: 40px;
-	position:absolute;
-	top:5px;
-	left:160px;
-
-}
-
 h2{
 	color:#3ebec0;
 	
 
-}
-
-table{
-	width:940px;
-	background: white;
-	padding: 5px;
-	position:absolute;
-	top:76px;
-	left:160px;
-	text-align: center
-
-}
-
-td{
-	color:white;
-	background-color: #3ebec0;
-	padding: 5px;
-	border-color: white;
-	border: 3px;
 }
 
 div.WB{
@@ -65,13 +25,12 @@ div.WB{
 	width:500px;
 	height: 500px;
 	padding: 1px 20px;
-	position:absolute;
-	top:150px;
+	position:relative;
 }
 
 iframe{
 	position:absolute;
-	top: 150px;
+	top: 0px;
 	left:600px;
 }
 
@@ -86,25 +45,11 @@ iframe{
 }
 
 </style>
-</head>
+{% endblock %}
+{% block left_status %}{% endblock %}
+{% block right_status %}Welcome, {{ user.name }}{% endblock %}
 
-
-
-<body>
-<img src="http://i1361.photobucket.com/albums/r679/richardsonasha/footer-logo_zps73f232fc.png" align="left" class="start" id="logo"> 
-<h1> Youth Radio Inside </h1>
-
-<table>
-<tr>
-<td> Check In </td>
-<td> Newsroom </td>
-<td> All Day Play </td>
-<td> Check In </td>
-<td> Finance </td>
-<td> Media Ed </td>
-<td> Health </td>
-</tr>
-</table>
+{% block page_content %}
 
 <div class="WB start"> 
 <p> <h2> Announcements </h2> <p id="plus"> + </p> <p>
@@ -116,7 +61,7 @@ iframe{
 
 <iframe src="https://www.google.com/calendar/embed?showTitle=0&amp;showPrint=0&amp;showCalendars=0&amp;showTz=0&amp;height=600&amp;wkst=1&amp;bgcolor=%23E8E8E8&amp;src=youthradio.org_l351kaako6g3005fuhne0ppar8%40group.calendar.google.com&amp;color=%23B1440E&amp;ctz=America%2FLos_Angeles" style=" border-width:0 " width="500" height="400" frameborder="0" scrolling="no"></iframe>
 
-
-</body>
-
-</html> 
+{% endblock %}
+{% block page_bottom %}
+{{ super() }}
+{% endblock %}
