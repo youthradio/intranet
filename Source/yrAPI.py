@@ -27,6 +27,9 @@ class yrAPI(object):
         elif request_method.upper() == 'POST':
             headers = {'content-type': 'application/x-www-form-urlencoded'}
             response = requests.post(self.server_url + api_method, data=data, allow_redirects=True, headers=headers)
+        elif request_method.upper() == 'PUT':
+            headers = {'content-type': 'application/x-www-form-urlencoded'}
+            response = requests.put(self.server_url + api_method, data=data, allow_redirects=True, headers=headers)
 
         return response.json()
 
@@ -106,3 +109,24 @@ class yrAPI(object):
             api_department = api_query_result['Department']
 
         return api_department
+
+    def getDepartments(self, WTFormat=False):
+        """ Get departments from the database.
+
+        WTFormat: a boolean to return the results as
+        tuples to be used with WTForms or just a plain list.
+        """
+        # Get the departments from the API
+        api_query_result = self.serverRequest('/admin/dept/list')
+        api_departments = departments = []
+
+        if api_query_result and api_query_result['Status'] == 'OK':
+            api_departments = api_query_result['Departments']
+
+        if WTFormat:
+            for department in api_departments:
+                departments.append((department['_id'], '%s' % (department['dept_name'])))
+        else:
+            departments = api_departments
+
+        return departments

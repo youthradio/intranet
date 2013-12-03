@@ -14,6 +14,7 @@ from views_metrics_adp import ADPMetricsViews
 from views_finance import FinanceViews
 from views_user import UserViews
 from views_newsroom import NewsroomViews
+from views_central import CentralViews
 
 # Setup Flask
 app = Flask(__name__, instance_relative_config=True)
@@ -44,6 +45,7 @@ metrics = MetricsAPI(url=app.config['METRICS_SERVER_URL'], request=request)
 logger.info('[API] All APIs registered.')
 
 # Set up the URL views
+centralView = CentralViews(request=request, yr_api=api, metrics_api=metrics)
 adpMetricsView = ADPMetricsViews(request=request, yr_api=api, metrics_api=metrics)
 financeView = FinanceViews(request=request, yr_api=api, metrics_api=metrics)
 userView = UserViews(request=request, yr_api=api, metrics_api=metrics)
@@ -53,7 +55,7 @@ logger.info('[FLASK] All Flask view objects instantiated.')
 """
 Overall web page views
 """
-app.add_url_rule('/', 'central_index', auth.required(adpMetricsView.metricsIndexPage), methods=["GET"])
+app.add_url_rule('/', 'central_index', auth.required(centralView.homePage), methods=["GET"])
 
 logger.info('[FLASK] All overall web page URL rules added.')
 
@@ -86,6 +88,7 @@ Finance views
 app.add_url_rule('/finance/category/add/', 'finance_category_add', auth.required(financeView.addPOCategory), methods=['GET', 'POST'])
 app.add_url_rule('/finance/dept/add/', 'finance_department_add', auth.required(financeView.addDepartment), methods=['GET', 'POST'])
 app.add_url_rule('/finance/dept/edit/<_id>', 'finance_department_edit', auth.required(lambda _id: financeView.addDepartment(_id)), methods=['GET', 'POST'])
+app.add_url_rule('/finance/dept/list/', 'finance_department_list', auth.required(financeView.listDepartments), methods=['GET'])
 
 logger.info('[FLASK] All Finance URL rules added.')
 
@@ -99,9 +102,15 @@ app.add_url_rule('/staff/list/', 'user_staff_list', auth.required(userView.staff
 """
 Newsroom Views
 """
-app.add_url_rule('/newsroom/dl', 'newsroom_dailylist_home', auth.required(newsroomView.dailyListForm), methods=['GET'])
-app.add_url_rule('/newsroom/dl/submit', 'newsroom_dailylist_submit', auth.required(newsroomView.dailyListSubmission), methods=['POST'])
+app.add_url_rule('/newsroom/dl/', 'newsroom_dailylist_home', auth.required(newsroomView.dailyListForm), methods=['GET'])
+app.add_url_rule('/newsroom/dl/preview/', 'newsroom_dailylist_preview', auth.required(newsroomView.dailyListPreview), methods=['POST'])
+app.add_url_rule('/newsroom/dl/submit/', 'newsroom_dailylist_submit', auth.required(newsroomView.dailyListSubmission), methods=['POST'])
+
+"""
+Newsroom AJAX
+"""
 app.add_url_rule('/_getPageTitleForDailyList', 'ajax_getPageTitleForDailyList', auth.required(newsroomView.ajaxDailyListGetTitle), methods=['GET'])
+app.add_url_rule('/_autoSaveForDailyList', 'ajax_autoSaveForDailyList', newsroomView.ajaxDailyListAutoSave, methods=['PUT'])
 
 logger.info('[FLASK] All User URL rules added.')
 

@@ -39,7 +39,7 @@ class CentralForm(Form):
 
     def populateFormFields(self, obj, prefix=''):
         """ In order to automatically populate the fields with
-        values from the database, then use this function. """
+        values from the database, use this function. """
         for field_name, field_value in obj.iteritems():
             if prefix + field_name in self:
                 self[prefix + field_name].data = field_value
@@ -150,7 +150,7 @@ class StaffMember(Person):
     extension = TextField('extension', validators=[
         validators.Optional()
     ])
-    department = TextField('department', validators=[
+    department = SelectField('department', validators=[
         validators.Optional()
     ])
     supervisor = SelectField('supervisor', validators=[
@@ -200,7 +200,7 @@ class AddDepartment(Department):
 
 class EditDepartment(Department):
     """ This is a WTForms implementatino for
-    adding a department to the Youth Radio database.
+    editing a department in the Youth Radio database.
     """
 
     dept_id = HiddenField()

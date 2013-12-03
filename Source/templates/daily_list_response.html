@@ -6,15 +6,25 @@
 </head> 
 <body style="background-color:#E8E8E8;padding:3px">
 
+<form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
 
 <table  style="background-color:#FFFFFF; border:1px solid #E8E8E8;border-collapse:collapse;" width="528"  >
 <thead>
   <tr>
-  <td width="403"> <h2 style= color:#3ebec0; >Newsroom Daily List</h2>
-  <strong> {{ current_date }} </strong> </td>
-    <td rowspan="2"> <img src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png" align="right"> </td>
-    
-  <tr>   
+    <td width="403">
+      <h2 style= color:#3ebec0; >Newsroom Daily List</h2>
+      <strong> {{ current_date }} </strong>
+    </td>
+    <td rowspan="2">
+      <img src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png" align="right">
+    </td>
+  </tr>
+  <tr>
+    <td>
+        {% if preview -%}
+        <input type="submit" value="Send to News Room" />
+        {%- endif %}
+    </td>
   </tr>
 </thead>
 
@@ -57,20 +67,20 @@
 
 <table bordercolor="#E8E8E8" style="background-color:#FFFFFF;padding:3px" width="528"> 
   <tr width="528">
-  <td colspan=2>
-  <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
-  <br> <strong style="color:#3ebec0">Newsroom</strong> 
-  <br> {{ request.form['Nr'] }} 
- </td>
- <tr> </tr>
- </tr>
- <tr>
-  <td>
-   <br> <strong style="color:#3ebec0">Brett</strong>
-  <br> {{ request.form['bm'] }} 
-  <td> 
-  <br> <strong style="color:#3ebec0">Denise</strong>
-  <br> {{ request.form['dt'] }} 
+    <td colspan=2>
+      <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
+      <br> <strong style="color:#3ebec0">Newsroom</strong> 
+      <br> {{ request.form['Nr'] }} 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <br> <strong style="color:#3ebec0">Brett</strong>
+      <br> {{ request.form['bm'] }}
+    </td>
+    <td>
+      <br> <strong style="color:#3ebec0">Denise</strong>
+      <br> {{ request.form['dt'] }} 
  </tr>
  <tr>
   <td>
@@ -132,6 +142,11 @@
 </tbody> 
 
 </table>
+
+    {% for key, value in request.form.iteritems() %}
+    <input type="hidden" name="{{ key }}" value="{{ value }}"> 
+    {% endfor %}
+</form>
 
 
 </body>

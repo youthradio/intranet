@@ -25,7 +25,10 @@ class UserViews(object):
         # Get the supervisors from the API
         form.supervisor.choices = [("", "Supervisor")] + api.getPeople(type='staff', WTFormat=True)
 
-        # If the information has been validated, then go ahead to the
+        # Get the departments from the API
+        form.department.choices = [("", "Department")] + api.getDepartments(WTFormat=True)
+
+        # If the information has been validated, then go ahead to the,
         # success page.
         if form.validate_on_submit():
             add_person = api.serverRequest('/person/add', request_method='POST', data=form.data)
@@ -57,6 +60,9 @@ class UserViews(object):
 
         # Get the supervisors from the API
         form.supervisor.choices = [("", "Supervisor")] + api.getPeople(type='staff', WTFormat=True)
+
+        # Get the departments from the API
+        form.department.choices = [("", "Department")] + api.getDepartments(WTFormat=True)
 
         # If the information has been validated, then go ahead to the
         # success page.

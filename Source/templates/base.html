@@ -41,20 +41,19 @@
         </div>
 
         <div id="yr_nav">
-         <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/footer-logo_zps73f232fc.png" align="left" class="start" id="logo"> 
+         <a href="{{ url_for('central_index') }}"><img src="/static/img/yr_logo.png" align="left" class="start" id="logo"></a> 
     
         <p> Youth Radio Central </p>
 
         <table>
             <tr>
-                <td> Newsroom </td>
-                <td> All Day Play </td>
-                <td> All Day Play </td>
-                <td> Check In </td>
-                <td> Finance </td>
-                <td> Media Ed </td>
-            <td> Health </td>
-        </tr>
+                <td><a href="{{ url_for('newsroom_dailylist_home') }}">Newsroom</a></td>
+                <td><a href="{{ url_for('metrics_adp_index') }}">All Day Play</a></td>
+                <td>Finance</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
         </table>
         </div> 
         <div class="some">

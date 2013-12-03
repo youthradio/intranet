@@ -95,7 +95,7 @@ class FinanceViews(object):
         form = forms.EditDepartment() if _id else forms.AddDepartment()
 
         if form.validate_on_submit():
-            dept = {'name': form.name.data}
+            dept = {'name': form.name.data} if not _id else {'name': form.name.data, 'dept_id': _id}
 
             # Post to the API.
             
@@ -130,4 +130,14 @@ class FinanceViews(object):
                                user=g.user,
                                title="Add A Department", 
                                form=form)
+
+    def listDepartments(self):
+        """ The list of departments. """
+        metrics = self.metrics_api
+        api = self.yr_api
+
+        return render_template("department_list.html",
+                               user=g.user, 
+                               title="Departments",
+                               departments=api.getDepartments())
 

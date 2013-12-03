@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Youth Radio Central{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block left_status %}{{ title }}{% endblock %}
+{% block right_status %}Welcome, {{ user.name }}{% endblock %}
+{% block page_content %}
+        <h1>{{ title }}</h1>
+        <div id="department_list">
+            <table>
+                {% for department in departments %}
+                <tr>
+                    <td>{{ department['dept_name'] }} (<a href="{{ url_for('finance_department_edit', _id=department['_id']) }}">edit</a>)</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+{% endblock %}
+{% block page_bottom %}
+{{ super() }}
+
+{% endblock %}

@@ -39,7 +39,9 @@
                 </p>
                 <p>
                     {{ form.title(size=23, placeholder="Job Title") }}
-                    {{ form.department(size=15, placeholder="Department") }}
+                    <span class="styled-select">
+                        {{ form.department() }}
+                    </span>
                 </p>
                 <p>
                     <span class="styled-select">

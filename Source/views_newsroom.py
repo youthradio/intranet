@@ -20,9 +20,9 @@ class NewsroomViews(object):
         self.logger.info('[NEWSROOM_VIEW] Instantiated with request and APIs.')
 
     def dailyListForm(self):
-        return render_template('daily_list_form.html')
+        return render_template('daily_list_form.html', user=g.user, title="Rebecca's Daily List")
 
-    def dailyListSubmission(self):
+    def dailyListPreview(self, isPreview=True):
         now = datetime.datetime.now()
         request = self.request
 
@@ -32,8 +32,16 @@ class NewsroomViews(object):
 
         todaydate = str(now.month) + "/" + str(now.day) + "/" + str(now.year)
 
-        mail("applab@youthradio.org", "The Daily List", render_template('daily_list_response.html', form=request.form , current_date = todaydate ))
-        return render_template('daily_list_response.html', form=request.form, current_date = todaydate )
+        return render_template('daily_list_response.html', 
+                               user=g.user,
+                               title="Preview The Daily List",
+                               form=request.form, 
+                               current_date=todaydate, 
+                               preview=isPreview)
+
+    def dailyListSubmission(self):
+        mail("kurt@youthradio.org", "The Daily List", self.dailyListPreview(isPreview=False))
+        return self.dailyListPreview(isPreview=False)
 
     def ajaxDailyListGetTitle(self):
         request = self.request
@@ -45,4 +53,21 @@ class NewsroomViews(object):
             "url":      url,
             "title":    title
         }
+        return json.dumps(response)
+
+    def ajaxDailyListAutoSave(self):
+        request = self.request
+        api = self.yr_api
+
+        key = request.form["key"]
+        value = request.form["value"]
+
+        data = {
+            "key": key,
+            "value": value
+        }
+
+        self.logger.info("[NEWSROOM_VIEW] Ajax DL Autosave saving: %s - %s" % (key, value))
+        response = api.serverRequest('/utilities/saveKeyValue', request_method='PUT', data=data)
+
         return json.dumps(response)
