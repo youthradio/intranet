@@ -14,8 +14,7 @@
  <form action='{{ url_for("newsroom_dailylist_preview") }}' id="dailyList" method="post">
 	
 	<div id="DLheader"> 
-    <h1>Rebecca's Daily List</h1>
-  	<input type="submit" value="Preview" />
+    <h1>Rebecca's Daily List</h1> <input type="submit" value="Preview" />
 	</div>
 
 	<div id="DLnews">
@@ -55,10 +54,12 @@
     </div>
 
     <div id="DLassn">
-        <h2> Assignments </h2>
-    	<p>Newsroom</p> 
+      <h2> Assignments </h2>
+    	
+      <p>Newsroom</p> 
     	<textarea rows="3"  name="Nr"></textarea>
 
+       <div class = "left"> 
     	<p> Brett </p>
     	<textarea rows="3"  name="bm"></textarea>
 
@@ -83,7 +84,10 @@
     	<p> Chaz</p>
     	<textarea rows="3"  name="ch"></textarea>
 
-    	<p> Ellin</p>
+    	</div>
+
+       <div class="right"> 
+      <p> Ellin</p>
     	<textarea rows="3"  name="eol"></textarea>
 
     	<p> Rebecca </p>
@@ -106,6 +110,8 @@
 
     	<p> Other <p> 
     	<textarea rows="3"  name="other"></textarea>
+      </p>
+      </div>
 
     </div>
 
