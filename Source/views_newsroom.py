@@ -40,7 +40,8 @@ class NewsroomViews(object):
                                preview=isPreview)
 
     def dailyListSubmission(self):
-        mail("kurt@youthradio.org", "The Daily List", self.dailyListPreview(isPreview=False))
+        #mail(["newsroom@youthradio.org", "development@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False))
+        mail(["asha@youthradio.org", "kurt@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False))
         return self.dailyListPreview(isPreview=False)
 
     def ajaxDailyListGetTitle(self):

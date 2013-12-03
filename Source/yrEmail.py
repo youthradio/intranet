@@ -12,8 +12,8 @@ def mail(to, subject, text):
     msg = MIMEMultipart()
 
     msg['From'] = gmail_user
-    msg['To'] = to
     msg['Subject'] = subject
+    msg['To'] = ", ".join(to)
 
     msg.attach(MIMEText(text, 'html'))
 
