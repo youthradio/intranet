@@ -15,7 +15,7 @@ def mail(to, subject, text):
     msg['Subject'] = subject
     msg['To'] = ", ".join(to)
 
-    msg.attach(MIMEText(text, 'html'))
+    msg.attach(MIMEText(text.encode('ascii', 'xmlcharrefreplace'), 'html'))
 
     mailServer = smtplib.SMTP("smtp.gmail.com", 587)
     mailServer.ehlo()
