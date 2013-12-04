@@ -12,7 +12,7 @@
         <thead>
           <tr>
             <td width="403">
-              <h1 style= color:#3ebec0; >Newsroom Daily List</h1>
+              <h2 style= color:#3ebec0; >Newsroom Daily List</h2>
               <strong> {{ current_date }} </strong>
             </td>
             <td rowspan="2">
@@ -34,33 +34,33 @@
             <td valign="top" width ="100%" style="border:4px solid #E8E8E8;padding:6px;">
             <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32209PM_zps657e43ed.png" border="0" alt=" photo ScreenShot2013-08-16at32209PM_zps657e43ed.png" height=30px/>
             <BR><strong style="color:#3ebec0">Youth Radio</strong> 
-            <BR> {{ request.form['yr']|safe }} 
+            <BR> {{ form['yr']|safe }} 
             <BR>
             <br> <strong style="color:#3ebec0">Player</strong> 
-            <BR> {{ request.form['player']|safe }} 
+            <BR> {{ form['player']|safe }} 
             <BR>
             <br> <strong style="color:#3ebec0">Podcast</strong> 
-            <br> {{ request.form['YRP']|safe }} 
+            <br> {{ form['YRP']|safe }} 
             <BR>
             <br> <strong style="color:#3ebec0">Turnstyle News</strong>
-            <br> {{ request.form['tn']|safe }}
+            <br> {{ form['tn']|safe }}
             <BR>
             <br> <strong style="color:#3ebec0">All Day Play</strong> 
-            <br> {{ request.form['adp']|safe }} 
+            <br> {{ form['adp']|safe }} 
             <BR>
             <br> <strong style="color:#3ebec0">Huffington Post</strong> 
-            <br> {{ request.form['HP']|safe }} 
+            <br> {{ form['HP']|safe }} 
             <BR>
             <br> <strong style="color:#3ebec0">Social Media</strong> 
-            <br> {{ request.form['SM']|safe }} 
+            <br> {{ form['SM']|safe }} 
              </td>
              
              <td valign="top" width = "35%" style="border:4px solid #E8E8E8;padding:3px;"> 
                  <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
-              <br> {{ request.form['news']|replace('<img class="dImg" src="/static/img/delete.png">', '')|safe }} 
+              <br> {{ form['news']|replace('<img class="dImg" src="/static/img/delete.png">', '')|safe }} 
               <br>
            <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
-              <br> {{ request.form['ann'] }} 
+              <br> {{ form['ann'] }} 
            
             </td> 
           </tr>
@@ -70,110 +70,110 @@
             <td colspan=2>
               <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
               <br> <strong style="color:#3ebec0">Newsroom</strong> 
-              <br> {{ request.form['Nr'] }} 
+              <br> {{ form['Nr'] }} 
             </td>
           </tr>
 
           <tr valign="top">
             <td>
               <strong style="color:#3ebec0">Brett</strong>
-              <br> {{ request.form['bm'] }}
+              <br> {{ form['bm'] }}
             </td>
 
             <td>
              <strong style="color:#3ebec0">Denise</strong>
-              <br> {{ request.form['dt'] }} 
+              <br> {{ form['dt'] }} 
             </td>
          </tr>
          
          <tr valign="top">
           <td>
             <strong style="color:#3ebec0">Robyn</strong> 
-            <br> {{ request.form['rg'] }} 
+            <br> {{ form['rg'] }} 
           </td>
 
           <td>
             <strong style="color:#3ebec0">Ike</strong> 
-            <br> {{ request.form['is'] }} 
+            <br> {{ form['is'] }} 
           </td>
          </tr>
 
          <tr valign="top">
           <td>
             <strong style="color:#3ebec0">Nishat</strong> 
-            <br> {{ request.form['nk'] }} 
+            <br> {{ form['nk'] }} 
           </td>
           
           <td>
             <strong style="color:#3ebec0">Noah</strong> 
-            <br> {{ request.form['nn'] }} 
+            <br> {{ form['nn'] }} 
           </td>
          </tr>
 
          <tr valign="top">
             <td>
               <strong style="color:#3ebec0">Teresa</strong>  
-              <br> {{ request.form['tc'] }} 
+              <br> {{ form['tc'] }} 
             </td>
             
             <td>
               <strong style="color:#3ebec0">Chaz</strong>
-              <br> {{ request.form['ch'] }} 
+              <br> {{ form['ch'] }} 
             </td>
          </tr>
 
          <tr valign="top">
             <td>
               <strong style="color:#3ebec0">Ellin</strong>
-              <br> {{ request.form['eol'] }} 
+              <br> {{ form['eol'] }} 
             </td>
             
             <td>
               <strong style="color:#3ebec0">Rebecca</strong>
-              <br> {{ request.form['rm'] }} 
+              <br> {{ form['rm'] }} 
             </td>
          </tr>
          
          <tr valign="top">
             <td>
               <strong style="color:#3ebec0">Lissa</strong>
-              <br> {{ request.form['ls'] }} 
+              <br> {{ form['ls'] }} 
             </td>
             
             <td>
             <strong style="color:#3ebec0">Asha</strong>
-            <br> {{ request.form['ar'] }} 
+            <br> {{ form['ar'] }} 
             </td>
          </tr>
 
          <tr valign="top">
             <td>
               <strong style="color:#3ebec0">Kurt</strong>
-              <br> {{ request.form['kc'] }} 
+              <br> {{ form['kc'] }} 
             </td>
             
             <td>
               <strong style="color:#3ebec0">Brandon</strong>
-              <br> {{ request.form['bmf'] }} 
+              <br> {{ form['bmf'] }} 
             </td>
          </tr>
 
          <tr valign="top">
           <td>
             <strong style="color:#3ebec0">Interns</strong>
-            <br> {{ request.form['interns'] }} 
+            <br> {{ form['interns'] }} 
           </td>
           
           <td>
             <strong style="color:#3ebec0">Other</strong>
-            <br> {{ request.form['other'] }} 
+            <br> {{ form['other'] }} 
           </td>
          </tr>
         </tbody> 
 
       </table>
 
-        {% for key, value in request.form.iteritems() %}
+        {% for key, value in form.iteritems() %}
         <input type="hidden" name="{{ key }}" value="{{ value }}"> 
         {% endfor %}
   </form>

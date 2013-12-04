@@ -32,10 +32,17 @@ class NewsroomViews(object):
 
         todaydate = str(now.month) + "/" + str(now.day) + "/" + str(now.year)
 
+        if isPreview:
+            replacedFormValues = dict(request.form)
+            for key, value in request.form.iteritems():
+                replacedFormValues[key] = value.replace('\n', '<br \>')
+        else:
+            replacedFormValues = request.form
+
         return render_template('daily_list_response.html', 
                                user=g.user,
                                title="Preview The Daily List",
-                               form=request.form, 
+                               form=replacedFormValues, 
                                current_date=todaydate, 
                                preview=isPreview)
 
