@@ -65,8 +65,8 @@ class NewsroomViews(object):
         if self.debug:
             mail(["asha@youthradio.org", "kurt@youthradio.org"], "[DEVELOPMENT] The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
         else:
-            mail(["asha@youthradio.org", "kurt@youthradio.org"], "[PRODUCTION] The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
-            #mail(["newsroom@youthradio.org", "development@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False))
+            #mail(["asha@youthradio.org", "kurt@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
+            mail(["newsroom@youthradio.org", "development@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False))
         return self.dailyListPreview(isPreview=False)
 
     def ajaxDailyListGetTitle(self):
