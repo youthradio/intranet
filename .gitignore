@@ -39,3 +39,5 @@ nosetests.xml
 
 # OS/X Ignores
 .DS_Store
+
+Source/instance/intranet_cfg.py

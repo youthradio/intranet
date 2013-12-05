@@ -19,6 +19,21 @@ class NewsroomViews(object):
         self.logger = logging.getLogger('yr_central')
         self.logger.info('[NEWSROOM_VIEW] Instantiated with request and APIs.')
 
+        self.gmail_user = ''
+        self.gmail_pass = ''
+        self.debug = True
+
+    def setDebug(self, debug):
+        self.debug = debug
+
+        return self.debug
+
+    def setGmailUsernameAndPassword(self, user, password):
+        self.gmail_user = user
+        self.gmail_pass = password
+
+        return True
+
     def dailyListForm(self):
         return render_template('daily_list_form.html', user=g.user, title="Rebecca's Daily List")
 
@@ -47,8 +62,11 @@ class NewsroomViews(object):
                                preview=isPreview)
 
     def dailyListSubmission(self):
-        #mail(["newsroom@youthradio.org", "development@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False))
-        mail(["asha@youthradio.org", "kurt@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False))
+        if self.debug:
+            mail(["asha@youthradio.org", "kurt@youthradio.org"], "[DEVELOPMENT] The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
+        else:
+            mail(["asha@youthradio.org", "kurt@youthradio.org"], "[PRODUCTION] The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
+            #mail(["newsroom@youthradio.org", "development@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False))
         return self.dailyListPreview(isPreview=False)
 
     def ajaxDailyListGetTitle(self):

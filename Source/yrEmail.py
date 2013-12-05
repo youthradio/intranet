@@ -3,12 +3,10 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEBase import MIMEBase
 from email.MIMEText import MIMEText
 from email import Encoders
+
 import os
 
-gmail_user = "scripts@youthradio.org"
-gmail_pwd = "TrBDXGZ9"
-
-def mail(to, subject, text):
+def mail(to, subject, text, gmail_user, gmail_pwd):
     msg = MIMEMultipart()
 
     msg['From'] = gmail_user

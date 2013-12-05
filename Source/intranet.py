@@ -50,6 +50,11 @@ adpMetricsView = ADPMetricsViews(request=request, yr_api=api, metrics_api=metric
 financeView = FinanceViews(request=request, yr_api=api, metrics_api=metrics)
 userView = UserViews(request=request, yr_api=api, metrics_api=metrics)
 newsroomView = NewsroomViews(request=request, yr_api=api, metrics_api=metrics)
+
+# Set up the options for the URL views
+newsroomView.setDebug(app.config['DEBUG'])
+newsroomView.setGmailUsernameAndPassword(app.config['GMAIL_USER'], app.config['GMAIL_PASSWORD'])
+
 logger.info('[FLASK] All Flask view objects instantiated.')
 
 """
