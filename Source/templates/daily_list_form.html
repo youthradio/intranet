@@ -2,14 +2,12 @@
 {% block title %}{{ title }} - Youth Radio Central{% endblock %}
 {% block head %}
 {{ super() }}
-        <script src="/static/js/jquery.autoSave.js"></script>
+        <script src="{{ js('jquery.autoSave.js') }}"></script>
 {% endblock %}
 {% block left_status %}{% endblock %}
 {% block right_status %}Welcome, {{ user.name }}{% endblock %}
 
 {% block page_content %}
-
-<!-- <body class="DL"> //-->
 
  <form action='{{ url_for("newsroom_dailylist_preview") }}' id="dailyList" method="post">
 	
@@ -154,7 +152,7 @@ var newsclick = $('#newsclick')
 
       // Add to the LI
       link = '<a href ="' + pageInfo.url + '" target="_blank">' + pageInfo.title + '</a>';
-      deleteImage = '<img class="dImg" src="/static/img/delete.png">';
+      deleteImage = '<img class="dImg" src="{{ img("delete.png") }}">';
       $('#story_list').append('<li>' + link + deleteImage + '</li>');
       $('#story_list li img').removeClass('dImg').addClass('dImg');
 

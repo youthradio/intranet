@@ -1,8 +1,10 @@
 <!doctype html>
 <head>
   <title> Newsroom Daily List </title>
+  {% if preview -%}
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+  <script>window.jQuery || document.write('<script src="{{ js("vendor/jquery-1.10.2.min.js") }}"><\/script>')</script>
+  {%- endif %}
 </head> 
 <body style="background-color:#E8E8E8;padding:3px">
 
@@ -57,7 +59,7 @@
              
              <td valign="top" width = "35%" style="border:4px solid #E8E8E8;padding:3px;"> 
                  <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
-              <br> {{ form['news']|replace('<img class="dImg" src="/static/img/delete.png">', '')|safe }} 
+              <br> {{ form['news']|replace('<img class="dImg" src="{{ img('delete.png') }}">', '')|safe }} 
               <br>
            <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
               <br> {{ form['ann']|safe }} 
