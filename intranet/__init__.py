@@ -17,9 +17,9 @@ from views_newsroom import NewsroomViews
 from views_central import CentralViews
 
 # Setup Flask
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__, instance_relative_config=False)
 #app.config.from_object(__name__)
-app.config.from_pyfile('intranet_cfg.py', silent=False)
+app.config.from_pyfile('instance/intranet_cfg.py', silent=False)
 
 # Set up Jinja Templating stuff
 app.jinja_env.globals['css'] = (lambda filepath: url_for('static', filename='css/'+filepath))
