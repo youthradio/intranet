@@ -10,9 +10,11 @@
 
 	<body style= "background-color:#E8E8E8;">
 
-	{% set dl_border_color = "#E8E8E8" %}
-	{% set dl_section_bg_color = "#3ebec0" %}
-	{% set dl_header_font_color = "#3ebec0" %}
+	{%
+		set dl_border_color = "#E8E8E8"
+		set dl_section_bg_color = "#3ebec0"
+		set dl_header_font_color = "#3ebec0"
+	%}
 		<form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
 
 		<table style="background-color:#FFFFFF; border:5px solid {{ dl_border_color }};border-collapse:collapse;" 
@@ -25,8 +27,8 @@
                 <input type="submit" value="Send to News Room" />
                 {%- endif %}
 			</td>
-		</tr>
-
+		</tr>"
+		"		
 		<tr valign="top" >
 			<td style= "border:5px solid {{ dl_border_color }};border-collapse:collapse;">
 				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; "> Daily Roundup </p>
@@ -44,8 +46,7 @@
 				<p> {{ form['HP']|safe }} </p>
 				<p style="color: {{ dl_header_font_color }}"> Social Media </p>
 				<p> {{ form['SM']|safe }} </p>
-			</td>
-		
+			<"/td">
 
 			<td style= "border:3px solid {{ dl_border_color }};border-collapse:collapse;">
 				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; "> Announcements </p>
