@@ -11,7 +11,7 @@
     <form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
 
       <table  style="background-color:#FFFFFF; border:1px solid #E8E8E8;border-collapse:collapse;" width="528"  >
-        <thead>
+        <thead style="background-color:#FFFFFF; border:px solid #E8E8E8;border-collapse:collapse;">
           <tr>
             <td width="403">
               <h2 style= color:#3ebec0; >Newsroom Daily List</h2>
@@ -33,46 +33,49 @@
 
         <tbody style="background-color:#FFFFFF; border:1px solid #E8E8E8;border-collapse:collapse;" width="528"  >
           <tr>
-            <td valign="top" width ="100%" style="border:4px solid #E8E8E8;padding:6px;">
-            <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32209PM_zps657e43ed.png" border="0" alt=" photo ScreenShot2013-08-16at32209PM_zps657e43ed.png" height=30px/>
-            <BR><strong style="color:#3ebec0">Youth Radio</strong> 
-            <BR> {{ form['yr']|safe }} 
-            <BR>
-            <br> <strong style="color:#3ebec0">Player</strong> 
-            <BR> {{ form['player']|safe }} 
-            <BR>
-            <br> <strong style="color:#3ebec0">Podcast</strong> 
-            <br> {{ form['YRP']|safe }} 
-            <BR>
-            <br> <strong style="color:#3ebec0">Turnstyle News</strong>
-            <br> {{ form['tn']|safe }}
-            <BR>
-            <br> <strong style="color:#3ebec0">All Day Play</strong> 
-            <br> {{ form['adp']|safe }} 
-            <BR>
-            <br> <strong style="color:#3ebec0">Huffington Post</strong> 
-            <br> {{ form['HP']|safe }} 
-            <BR>
-            <br> <strong style="color:#3ebec0">Social Media</strong> 
-            <br> {{ form['SM']|safe }} 
+            <td valign="top" width ="100%" style="border:5px solid #E8E8E8;padding:0px;">
+	           <p  style= "background:#3ebec0 ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; " > Today's Roundup </p>
+	            
+	            <BR><strong style="color:#3ebec0">Youth Radio</strong> 
+	            <BR> {{ form['yr']|safe }} 
+	            <BR>
+	            <br> <strong style="color:#3ebec0">Player</strong> 
+	            <BR> {{ form['player']|safe }} 
+	            <BR>
+	            <br> <strong style="color:#3ebec0">Podcast</strong> 
+	            <br> {{ form['YRP']|safe }} 
+	            <BR>
+	            <br> <strong style="color:#3ebec0">Turnstyle News</strong>
+	            <br> {{ form['tn']|safe }}
+	            <BR>
+	            <br> <strong style="color:#3ebec0">All Day Play</strong> 
+	            <br> {{ form['adp']|safe }} 
+	            <BR>
+	            <br> <strong style="color:#3ebec0">Huffington Post</strong> 
+	            <br> {{ form['HP']|safe }} 
+	            <BR>
+	            <br> <strong style="color:#3ebec0">Social Media</strong> 
+	            <br> {{ form['SM']|safe }} 
              </td>
              
-             <td valign="top" width = "35%" style="border:4px solid #E8E8E8;padding:3px;"> 
-                 <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32145PM.png" height=30px>
-              <br> 
+             <td valign="top" width = "35%" style="border:5px solid #E8E8E8;padding:0px;"> 
+               <p  style= "background:#3ebec0 ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; " >  Announcements</p>
+   
+   				<br> {{ form['ann']|safe }} 
+
+               <p  style= "background:#3ebec0 ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; " > In the News </p>
+
+               <br> 
               {% set deleteImageSrcText = '<img class="dImg" src="' + img('delete.png') + '">' %}
               {{ form['news']|replace(deleteImageSrcText, '')|safe }} 
-              <br>
-           <img src="http://i1361.photobucket.com/albums/r679/richardsonasha/ScreenShot2013-08-16at32156PM_zps325bcbbb.png" border="0" alt=" photo ScreenShot2013-08-16at32156PM_zps325bcbbb.png" height=30px/>
-              <br> {{ form['ann']|safe }} 
-           
+                         
             </td> 
           </tr>
 
-        <table bordercolor="#E8E8E8" style="background-color:#FFFFFF;padding:3px" width="528"> 
+        <table bordercolor="#E8E8E8" style="background-color:#FFFFFF;" width="528"> 
           <tr width="528">
             <td colspan=2>
-              <img src="http://i191.photobucket.com/albums/z43/CCA_art/ScreenShot2013-08-16at32235PM.png" height="30px">
+               <p  style= "background:#3ebec0 ; color: #FFFFFF; width:100%; height:30px; border:4px ; position: relative; top: -18px; left: " > Assignments </p>
               <br> <strong style="color:#3ebec0">Newsroom</strong> 
               <br> {{ form['Nr']|safe }} 
             </td>
