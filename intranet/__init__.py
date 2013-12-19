@@ -17,7 +17,7 @@ from views_newsroom import NewsroomViews
 from views_central import CentralViews
 
 # Setup Flask
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__, instance_relative_config=False)
 #app.config.from_object(__name__)
 app.config.from_pyfile('instance/intranet_cfg.py', silent=True)
 app.config.from_envvar('INTRANET_CONFIG_FILE', silent=True)
@@ -125,11 +125,3 @@ app.add_url_rule('/_autoSaveForDailyList', 'ajax_autoSaveForDailyList', newsroom
 
 logger.info('[FLASK] All User URL rules added.')
 
-if __name__ == "__main__":
-    app.debug = app.config["DEBUG"]
-    logger.info('Youth Radio Central server started. HOST: %s:%i' % (app.config["HOST"], app.config["PORT"]) )
-
-    if app.debug:
-        app.run(host=app.config["HOST"], port=app.config["PORT"])
-    else:
-        app.run()

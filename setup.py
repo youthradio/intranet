@@ -17,6 +17,7 @@ setup(
 		"beautifulsoup4",
 		"wtforms",
 		"validate_email",
-		"pytz"
+		"pytz",
+		"html5lib"
 	]
 )

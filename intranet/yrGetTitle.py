@@ -11,6 +11,6 @@ def getPageTitle(url):
     opener.addheaders = [('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:17.0) Gecko/20100101 Firefox/17.0')]
     response = opener.open(url)
     html = response.read().replace("</scr' + 'ipt>","")
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, "html5lib")
 
     return soup.title.string
