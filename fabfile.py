@@ -48,11 +48,11 @@ def git_deploy():
     with cd(TEMP_DIR):
         run('git clone %s' % GITHUB_REPO)
 
-    with cd(TEMP_DIR + '/intranet/intranet'):
+    with cd(TEMP_DIR + '/intranet'):
         run('sudo python setup.py install')
 
     # now that all is set up, delete the folder again
-    run('sudo rm -Rf %s %s' % (TEMP_DIR))
+    run('sudo rm -Rf %s' % (TEMP_DIR))
     # and finally touch the .wsgi file so that mod_wsgi triggers
     # a reload of the application
     run('sudo touch %s' % WSGI_FILE)
