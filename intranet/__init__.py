@@ -19,8 +19,8 @@ from views_central import CentralViews
 # Setup Flask
 app = Flask(__name__, instance_relative_config=True)
 #app.config.from_object(__name__)
-app.config.from_pyfile('instance/intranet_cfg.py', silent=False)
-app.config.from_envvar('INTRANET_CONFIG_FILE', silent=False)
+app.config.from_pyfile('instance/intranet_cfg.py', silent=True)
+app.config.from_envvar('INTRANET_CONFIG_FILE', silent=True)
 
 # Set up Jinja Templating stuff
 app.jinja_env.globals['css'] = (lambda filepath: url_for('static', filename='css/'+filepath))
