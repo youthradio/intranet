@@ -38,14 +38,7 @@ class NewsroomViews(object):
         return render_template('daily_list_form.html', user=g.user, title="Rebecca's Daily List")
 
     def dailyListPreview(self, isPreview=True):
-        now = datetime.datetime.now()
         request = self.request
-
-        current_year = now.year
-        current_month = now.month
-        current_day = now.day
-
-        todaydate = str(now.month) + "/" + str(now.day) + "/" + str(now.year)
 
         if isPreview:
             replacedFormValues = dict(request.form)
@@ -58,15 +51,15 @@ class NewsroomViews(object):
                                user=g.user,
                                title="Preview The Daily List",
                                form=replacedFormValues, 
-                               current_date=todaydate, 
+                               current_date=getFormattedDate(), 
                                preview=isPreview)
 
     def dailyListSubmission(self):
         if self.debug:
-            mail(["asha@youthradio.org", "kurt@youthradio.org"], "[DEVELOPMENT] The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
+            mail(["asha@youthradio.org", "kurt@youthradio.org"], "[DEVELOPMENT] The Daily List - " + getFormattedDate(), self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
         else:
             #mail(["asha@youthradio.org", "kurt@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
-            mail(["newsroom@youthradio.org", "development@youthradio.org"], "The Daily List", self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
+            mail(["newsroom@youthradio.org", "development@youthradio.org"], "The Daily List" + getFormattedDate(), self.dailyListPreview(isPreview=False), self.gmail_user, self.gmail_pass)
         return self.dailyListPreview(isPreview=False)
 
     def ajaxDailyListGetTitle(self):
@@ -97,3 +90,12 @@ class NewsroomViews(object):
         response = api.serverRequest('/utilities/saveKeyValue', request_method='PUT', data=data)
 
         return json.dumps(response)
+
+def getFormattedDate():
+        now = datetime.datetime.now()
+
+        current_year = now.year
+        current_month = now.month
+        current_day = now.day
+
+        return str(now.month) + "/" + str(now.day) + "/" + str(now.year)
