@@ -143,6 +143,11 @@ var newsclick = $('#newsclick')
 
   // Event handler for adding a link...
   $('#newsclick').on("click", function (event) {
+    // Change the status of the button
+    $(this).attr("value", "retrieving...");
+    $(this).attr("disabled", "disabled");
+
+    // Get the link
     $.get(
       '{{ url_for("ajax_getPageTitleForDailyList") }}',
       { url: newslink.val() }
@@ -150,20 +155,28 @@ var newsclick = $('#newsclick')
       // Convert this to JSON
       pageInfo = jQuery.parseJSON(page)
 
-      // Add to the LI
-      link = '<a href ="' + pageInfo.url + '" target="_blank">' + pageInfo.title + '</a>';
-      deleteImage = '<img class="dImg" src="{{ img("delete.png") }}">';
-      $('#story_list').append('<li>' + link + deleteImage + '</li>');
-      $('#story_list li img').removeClass('dImg').addClass('dImg');
+      // Test to see if there's an error...
+      if (pageInfo.title.substring(0,7) == "DLError") {
+        alert("Sorry! We can't access this site.")
+      } else{
+        // Add to the LI
+        link = '<a href ="' + pageInfo.url + '" target="_blank">' + pageInfo.title + '</a>';
+        deleteImage = '<img class="dImg" src="{{ img("delete.png") }}">';
+        $('#story_list').append('<li>' + link + deleteImage + '</li>');
+        $('#story_list li img').removeClass('dImg').addClass('dImg');
 
-      // Event handler for deleting a link...
-      $('.dImg').on('click', function (event) {
-        $(this).parent().remove();
-      })
+        // Event handler for deleting a link...
+        $('.dImg').on('click', function (event) {
+          $(this).parent().remove();
+        })
 
-      // Clear the input box
-      newslink.val('');
+        // Clear the input box
+        newslink.val('');
+      };
     });
+
+    $(this).removeAttr("disabled");
+    $(this).attr("value", "add");
   });
 
   if (localStorage) {

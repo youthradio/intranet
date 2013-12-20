@@ -66,7 +66,10 @@ class NewsroomViews(object):
         request = self.request
 
         url = request.args.get('url')
-        title = getPageTitle(url)
+        try:
+            title = getPageTitle(url)
+        except Exception, e:
+            title = "DLError: " + unicode(e)
 
         response = {
             "url":      url,
