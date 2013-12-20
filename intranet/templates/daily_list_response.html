@@ -13,44 +13,48 @@
 	{% set dl_border_color = "#E8E8E8" %}
 	{% set dl_section_bg_color = "#3ebec0" %}
 	{% set dl_header_font_color = "#3ebec0" %}
+	{% set dl_font = "Arial, sans serif" %}
+
 		<form action='{{ url_for("newsroom_dailylist_submit") }}' id="dailyList" method="post">
 
 		<table style="background-color:#FFFFFF; border:5px solid {{ dl_border_color }};border-collapse:collapse;" 
 		width="600px" >
 		<tr>
-			<td colspan="2">
-				<p> <strong> {{ current_date }} </strong> </p>
-				<p> Daily List </p>
+			<td colspan="2" style="height:80px;">
+				<p style="font-family: {{ dl_font }}; font-family: {{ dl_font }};"> <strong valign="top" style="position:absolute; top:20px;"> {{ current_date }} </strong> </p>
+				<p style="font-family: {{ dl_font }}; color:#3ebec0 ; position:absolute; top:5px; font-size: 30px;"> Daily List </p>
 				{% if preview -%}
-                <input type="submit" value="Send to News Room" />
+                <input style= "position:absolute; top:70px; "  type="submit" value="Send to News Room"  />
                 {%- endif %}
+
+                <img style="position:absolute; top:15px; left:440px;" height="80px"  src="https://youthradio.org/wp-content/themes/youthradio/library/images/s/footer-logo.png" />
 			</td>
 		</tr>
 
 		<tr valign="top" >
 			<td style= "border:5px solid {{ dl_border_color }};border-collapse:collapse;">
-				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; "> Daily Roundup </p>
-				<p style="color: {{ dl_header_font_color }}"> Youth Radio</p>
-				<p> {{ form['yr']|safe }} </p>
-				<p style="color: {{ dl_header_font_color }}"> Player </p>
-				<p> {{ form['player']|safe }} </p>
-				<p style="color: {{ dl_header_font_color }}"> Podcast </p>
-				<p> {{ form['YRP']|safe }} </p>
-				<p style="color: {{ dl_header_font_color }}"> Turnstyle News</p>
-				<p> {{ form['tn']|safe }} </p>
-				<p style="color: {{ dl_header_font_color }}"> All Day Play</p>
-				<p> {{ form['adp']|safe }} </p>
-				<p style="color: {{ dl_header_font_color }}"> Huffington Post </p>
-				<p> {{ form['HP']|safe }} </p>
-				<p style="color: {{ dl_header_font_color }}"> Social Media </p>
-				<p> {{ form['SM']|safe }} </p>
+				<p  valign="top" style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -17px; font-family: {{ dl_font }} "> Daily Roundup </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Youth Radio</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['yr']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Player </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['player']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Podcast </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['YRP']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Turnstyle News</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['tn']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> All Day Play</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['adp']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Huffington Post </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['HP']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Social Media </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['SM']|safe }} </p>
 			</td>
 		
 
 			<td style= "border:3px solid {{ dl_border_color }};border-collapse:collapse;">
-				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; "> Announcements </p>
-				<p> {{ form['ann']|safe }} </p>
-				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; "> In the News </p>
+				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -17px;font-family: {{ dl_font }} "> Announcements </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['ann']|safe }} </p>
+				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px;font-family: {{ dl_font }} "> In the News </p>
 				 {% set deleteImageSrcText = '<img class="dImg" src="' + img('delete.png') + '">' %}
               {{ form['news']|replace(deleteImageSrcText, '')|safe }} 
 			</td>
@@ -59,94 +63,94 @@
 
 		<tr>
 			<td style= "border:3px solid #FFFFFF;border-collapse:collapse;" colspan="2">
-				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -16px; "> Assignments </p>
-				<p> Newsroom </p>
-				<p> {{ form['Nr']|safe }} </p>
+				<p  style= "background:{{ dl_section_bg_color }} ; color: #FFFFFF; width:100%; height:30px; border:3px ; position: relative; top: -17px;font-family: {{ dl_font }} "> Assignments </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Newsroom </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['Nr']|safe }} </p>
 			</td>
 		</tr>
 
 
 		<tr>
 			<td>
-				<p> Brett </p>
-				<p> {{ form['bm']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Brett </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['bm']|safe }} </p>
 			</td>
 
 			<td>
-				<p>Denise</p>
-				<p> {{ form['dt']|safe }} </p>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<p>Robyn </p>
-				<p> {{ form['rg']|safe }}  </p>
-			</td>
-
-			<td>
-				<p>Ike </p>
-				<p> {{ form['is']|safe }} </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Denise</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['dt']|safe }} </p>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<p>Nishat </p>
-				<p> {{ form['nk']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Robyn </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['rg']|safe }}  </p>
 			</td>
 
 			<td>
-
-				<p>Noah</p>
-				<p> {{ form['nn']|safe }}  </p>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<p>Teresa </p>
-				<p> {{ form['tc']|safe }}  </p>
-			</td>
-
-			<td>
-				<p>Chaz</p>
-				<p> {{ form['ch']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Ike </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['is']|safe }} </p>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<p>Ellin </p>
-				<p> {{ form['eol']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Nishat </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['nk']|safe }}  </p>
 			</td>
 
 			<td>
-				<p>Rebecca </p>
-				<p> {{ form['rm']|safe }}  </p>
+
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Noah</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['nn']|safe }}  </p>
 			</td>
 		</tr>
 
 		<tr>
 			<td>
-				<p>Lissa </p>
-				<p> {{ form['ls']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Teresa </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['tc']|safe }}  </p>
 			</td>
 
 			<td>
-				<p> Asha </p>
-				<p> {{ form['ar']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Chaz</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['ch']|safe }}  </p>
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Ellin </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['eol']|safe }}  </p>
+			</td>
+
+			<td>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Rebecca </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['rm']|safe }}  </p>
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}">Lissa </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['ls']|safe }}  </p>
+			</td>
+
+			<td>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Asha </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['ar']|safe }}  </p>
 			</td>
 
 		<tr>
 			<td>
-				<p> Kurt </p>
-				<p> {{ form['kc']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Kurt </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['kc']|safe }}  </p>
 			</td>
 
 			<td>
-				<p> Brandon</p>
-				<p> {{ form['bmf']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Brandon</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['bmf']|safe }}  </p>
 			</td>
 		</tr>
 		
@@ -154,13 +158,13 @@
 
 		<tr>
 			<td>
-				<p> Interns </p>
-				<p> {{ form['interns']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Interns </p>
+				<p style="font-family: {{ dl_font }};" > {{ form['interns']|safe }}  </p>
 			</td>
 
 			<td>
-				<p> Other</p>
-				<p> {{ form['other']|safe }}  </p>
+				<p style="font-family: {{ dl_font }}; color: {{ dl_header_font_color }}"> Other</p>
+				<p style="font-family: {{ dl_font }};" > {{ form['other']|safe }}  </p>
 			</td>
 		</tr>
 		</table>
