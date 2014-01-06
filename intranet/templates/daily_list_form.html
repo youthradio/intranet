@@ -158,11 +158,11 @@ var newsclick = $('#newsclick')
       // Test to see if there's an error...
       if (pageInfo.title.substring(0,7) == "DLError") {
         alert("Sorry! We can't access this site.")
-      } else{
+      } else {
         // Add to the LI
         link = '<a href ="' + pageInfo.url + '" target="_blank">' + pageInfo.title + '</a>';
         deleteImage = '<img class="dImg" src="{{ img("delete.png") }}">';
-        $('#story_list').append('<li>' + link + deleteImage + '</li>');
+        $('#story_list').prepend('<li>' + link + deleteImage + '</li>');
         $('#story_list li img').removeClass('dImg').addClass('dImg');
 
         // Event handler for deleting a link...
